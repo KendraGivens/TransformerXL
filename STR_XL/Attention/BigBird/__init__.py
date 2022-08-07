@@ -332,17 +332,12 @@ class BigBirdAttention(tf.keras.layers.MultiHeadAttention):
                 to_block_size=self._to_block_size,
                 rand_attn=rand_attn)
 
-    def call(self, query, value, key=None, state=None, attention_mask=None, **kwargs):
+    def call(self, query, value, key=None, attention_mask=None, **kwargs):
         if not self._built_from_signature:
             self._build_from_signature(query=query, value=value, key=key)
             
         if key is None:
             key = value
-            
-        if state is not None and state.shape.ndims > 1:
-                value = tf.concat([state, value], 1)
-                key = tf.concat([state, key], 1)
-                query = tf.concat([state, key], 1)
 
         query = self._query_dense(query)
         
