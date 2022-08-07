@@ -1,10 +1,10 @@
-
 import os
 import sys
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
-sys.path.append("../../deep-learning-dna")
+sys.path.append("../../../deep-learning-dna")
+sys.path.append("../")
 
 import wandb
 
@@ -80,13 +80,13 @@ class Set_Transformer_Model(keras.Model):
         self.attention_blocks = []
         
         if self.num_induce == 0:
-              for i in range(self.stack):
+            for i in range(self.stack):
                 self.attention_blocks.append(Set_Transformer.SetAttentionBlock(embed_dim=self.embed_dim,num_heads=self.attention_num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm,use_keras_mha=self.use_keras_mha))
         else:
             for i in range(self.stack):
                 self.attention_blocks.append(Set_Transformer.InducedSetAttentionBlock(embed_dim=self.embed_dim,num_heads=self.attention_num_heads, num_induce=self.num_induce, use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm,use_keras_mha=self.use_keras_mha))
 
-        self.pooling_layer = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds,embed_dim=self.embed_dim,num_heads=self.pooling_num_heads,_use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm,use_keras_mha=self.use_keras_mha,is_final_block=True)
+        self.pooling_layer = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds,embed_dim=self.embed_dim,num_heads=self.pooling_num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm,use_keras_mha=self.use_keras_mha,is_final_block=True)
     
         self.reshape_layer = keras.layers.Reshape((self.embed_dim,))
         

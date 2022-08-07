@@ -20,7 +20,7 @@ from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
 
-from Scripts.Mem_StrXL import *
+from Scripts.StrXL import *
 
 def define_arguments(cli):
     cli.use_strategy()
@@ -30,11 +30,11 @@ def define_arguments(cli):
     
     cli.argument("--seed", type=int, default = None)
     
-    cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=True)
+    cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
     cli.argument("--max_files", type=int, default = 205)
     cli.argument("--block_size", type=int, default = 200)
     cli.argument("--max_set_len", type=int, default = 1000)
-    cli.argument("--num_induce", type=int, default = 0)
+    cli.argument("--num_induce", type=int, default = 48)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
@@ -94,7 +94,7 @@ def train(config):
         
         max_files = len(trimmed_samples)
         
-        model = XlModel(max_files, encoder, config.block_size, config.max_set_len, config.num_induce, config.embed_dim, config.num_layers, config.num_heads, config.mem_len, config.dropout_rate, config.num_seeds, config.use_layernorm, config.pre_layernorm, config.use_keras_mha)
+        model = XlModel(config.mem_switched, max_files, encoder, config.block_size, config.max_set_len, config.num_induce, config.embed_dim, config.num_layers, config.num_heads, config.mem_len, config.dropout_rate, config.num_seeds, config.use_layernorm, config.pre_layernorm, config.use_keras_mha)
         
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3), 
                         metrics=keras.metrics.SparseCategoricalAccuracy())

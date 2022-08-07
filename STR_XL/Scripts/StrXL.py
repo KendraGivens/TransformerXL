@@ -1,16 +1,18 @@
- # Transformer XL
-import sys
-import tf_utils as tfu
 import os
+import sys
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
-sys.path.append("../")
 sys.path.append("../../../deep-learning-dna")
+sys.path.append("../")
+
+import wandb
 
 import tensorflow as tf
 import tensorflow.keras as keras
 import numpy as np
+import matplotlib.pyplot as plt
+from IPython.display import display
 import math
 import string
 
@@ -20,6 +22,8 @@ from common import dna
 from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
+
+import tf_utils as tfu
 
 class Create_Embeddings(keras.layers.Layer):
     def __init__(self, encoder):
@@ -52,7 +56,6 @@ class Create_Embeddings(keras.layers.Layer):
     def call(self, data):
         return  self.modify_data_for_input(data)
 
-
 def Cache_Memory(current_state, previous_state, memory_length):
     if memory_length is None or memory_length == 0:
         return None
@@ -76,7 +79,7 @@ class Attention(keras.Model):
         self.pre_layernorm = pre_layernorm
         self.use_keras_mha = use_keras_mha
         
-        if self.num_induce == 0:        
+        if self.num_induce == 0:       
             self.attention = (Set_Transformer.SetAttentionBlock(embed_dim=self.embed_dim, num_heads=self.num_heads, use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm,use_keras_mha=self.use_keras_mha))
         else:
             self.attention = Set_Transformer.InducedSetAttentionBlock(embed_dim=self.embed_dim, num_heads=self.num_heads, num_induce=self.num_induce, use_layernorm=self.use_layernorm, pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha)
@@ -87,7 +90,6 @@ class Attention(keras.Model):
             attention = self.attention([data, mems])
                 
             return attention
-
 
 class TransformerXLBlock(tf.keras.layers.Layer):
     def __init__(self,
@@ -122,6 +124,7 @@ class TransformerXLBlock(tf.keras.layers.Layer):
 
 class TransformerXL(tf.keras.layers.Layer):
     def __init__(self,
+                 mem_switched, 
                  num_layers,
                  num_induce,
                  embed_dim,
@@ -134,6 +137,7 @@ class TransformerXL(tf.keras.layers.Layer):
         
         super(TransformerXL, self).__init__()
 
+        self.mem_switched = mem_switched
         self.num_layers = num_layers
         self.num_induce = num_induce
         self.embed_dim = embed_dim
@@ -167,7 +171,8 @@ class TransformerXL(tf.keras.layers.Layer):
             state = [None] * self.num_layers
             
         for i in range(self.num_layers):
-            new_mems.append(Cache_Memory(content_stream, state[i], self.mem_len))
+            if self.mem_switched == False:
+                new_mems.append(Cache_Memory(content_stream, state[i], self.mem_len))
             
             transformer_xl_layer = self.transformer_xl_layers[i]
             
@@ -175,14 +180,18 @@ class TransformerXL(tf.keras.layers.Layer):
                                                         state=state[i])
             
             content_stream = self.output_dropout(transformer_xl_output)
+            
+            if self.mem_switched == True:
+                new_mems.append(Cache_Memory(content_stream, state[i], self.mem_len))
 
         output_stream = content_stream
         return output_stream, new_mems
 
 class XlModel(keras.Model):
-    def __init__(self, max_files, encoder, block_size, max_set_len, num_induce, embed_dim, num_layers, num_heads, mem_len, dropout_rate, num_seeds, use_layernorm, pre_layernorm, use_keras_mha):
+    def __init__(self, mem_switched, max_files, encoder, block_size, max_set_len, num_induce, embed_dim, num_layers, num_heads, mem_len, dropout_rate, num_seeds, use_layernorm, pre_layernorm, use_keras_mha):
         super(XlModel, self).__init__()
         
+        self.mem_switched = mem_switched
         self.max_files = max_files
         self.encoder = encoder
         self.block_size = block_size
@@ -202,7 +211,8 @@ class XlModel(keras.Model):
 
         self.linear_layer = keras.layers.Dense(self.embed_dim)
         
-        self.transformer_xl = TransformerXL(self.num_layers,
+        self.transformer_xl = TransformerXL(self.mem_switched,
+                                            self.num_layers,
                                              self.num_induce,
                                              self.embed_dim,
                                              self.num_heads,
