@@ -30,19 +30,19 @@ def define_arguments(cli):
     
     cli.argument("--seed", type=int, default = None)
     
-    cli.argument("--embed_dim", type=int, default = 64)
+    cli.argument("--embed_dim", type=int, default = 48)
     cli.argument("--stack", type=int, default = 4)
     cli.argument("--num_seeds", type=int, default = 1)    
     cli.argument("--pooling_num_heads", type=int, default = 1)
     
-    cli.argument("--attention_block_size", type=int, default = 10)
+    cli.argument("--attention_block_size", type=int, default = 8)
     cli.argument("--dropout", type=int, default = .01)
-    cli.argument("--inner_size", type=int, default = 64)
-    cli.argument("--attention_num_heads", type=int, default = 8) 
-    cli.argument("--key_dim", type=int, default = 32)
+    cli.argument("--inner_size", type=int, default = 48)
+    cli.argument("--attention_num_heads", type=int, default = 6) 
+    cli.argument("--key_dim", type=int, default = 48)
     cli.argument("--num_rand_blocks", type=int, default = 4)
-    cli.argument("--from_block_size", type=int, default = 10)
-    cli.argument("--to_block_size", type=int, default = 10)
+    cli.argument("--from_block_size", type=int, default = 8)
+    cli.argument("--to_block_size", type=int, default = 8)
     
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
