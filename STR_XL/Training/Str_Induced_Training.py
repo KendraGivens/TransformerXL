@@ -32,8 +32,8 @@ def define_arguments(cli):
     
     cli.argument("--num_induce", type=int, default = 48)
     cli.argument("--embed_dim", type=int, default = 64)
-    cli.argument("--attention_num_heads", type=int, default = 8)
-    cli.argument("--stack", type=int, default = 8)
+    cli.argument("--attention_num_heads", type=int, default = 6)
+    cli.argument("--stack", type=int, default = 6)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--use_keras_mha", type=tfu.utils.str_to_bool, default = True)  
