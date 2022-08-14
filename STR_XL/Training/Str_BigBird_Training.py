@@ -76,7 +76,7 @@ def load_dataset(config):
 
     rng.shuffle(random_samples)
 
-    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples[0:5], split_ratios=split_ratios, 
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, 
                                                     subsample_length=set_len, sequence_length=sequence_len, kmer=kmer,
                                                     batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
 

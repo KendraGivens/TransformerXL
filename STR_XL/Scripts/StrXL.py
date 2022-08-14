@@ -51,7 +51,8 @@ class Create_Embeddings(keras.layers.Layer):
         subsample_size = tf.shape(data)[1]
         flat_data = tf.reshape(data, (batch_size*subsample_size, -1))
         encoded = self.subbatch_predict(self.encoder, flat_data, 128)
-        return tf.reshape(encoded, (batch_size, subsample_size, -1))
+        result = tf.reshape(encoded, (batch_size, subsample_size, -1))
+        return result
     
     def call(self, data):
         return  self.modify_data_for_input(data)
