@@ -20,7 +20,7 @@ from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
 
-from Scripts.StrXL import *
+from Scripts.StrXL_Compressed import *
 
 def define_arguments(cli):
     cli.use_strategy()
@@ -31,13 +31,12 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
-    cli.argument("--max_files", type=int, default = 205)
     cli.argument("--block_size", type=int, default = 200)
     cli.argument("--max_set_len", type=int, default = 1000)
-    cli.argument("--num_induce", type=int, default = 30)
-    cli.argument("--embed_dim", type=int, default = 128)
-    cli.argument("--num_layers", type=int, default = 4)
-    cli.argument("--num_heads", type=int, default = 4)
+    cli.argument("--num_induce", type=int, default = 0)
+    cli.argument("--embed_dim", type=int, default = 64)
+    cli.argument("--num_layers", type=int, default = 8)
+    cli.argument("--num_heads", type=int, default = 8)
     cli.argument("--mem_len", type=int, default = 200)
     cli.argument("--dropout_rate", type=float, default = 0.01)
     cli.argument("--num_seeds", type=int, default = 1)
