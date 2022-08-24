@@ -400,7 +400,7 @@ class PoolingByMultiHeadAttention(keras.layers.Layer):
             name="Seeds")
 
 
-    def call(self, z, training=None):
+    def call(self, z, training=None):        
         batch_size = tf.shape(z)[0]
         seeds = tf.tile(self.seed_vectors, (batch_size, 1, 1))
         return self.mab((seeds, z), training=training)

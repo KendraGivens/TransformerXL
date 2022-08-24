@@ -5,6 +5,7 @@ os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
 sys.path.append("../../../deep-learning-dna")
 sys.path.append("../")
+sys.path.append("../../../deep-learning-dna/common")
 
 import wandb
 
@@ -56,19 +57,19 @@ class Create_Embeddings(keras.layers.Layer):
     
     def call(self, data):
         return  self.modify_data_for_input(data)
-
+    
 class Compress_Memory(keras.layers.Layer):
-    def __init__(self, compress_num_induce, compress_embed_dim, compress_num_heads, use_layernorm, pre_layernorm, use_keras_mha):
+    def __init__(self, num_seeds, embed_dim, num_heads, use_layernorm, pre_layernorm, use_keras_mha):
         super(Compress_Memory, self).__init__()
         
-        self.compress_num_induce = compress_num_induce
-        self.compress_embed_dim = compress_embed_dim
-        self.compress_num_heads = compress_num_heads
+        self.num_seeds = num_seeds
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
         self.use_layernorm = use_layernorm
         self.pre_layernorm = pre_layernorm
         self.use_keras_mha = use_keras_mha
         
-        self.compresser = Attention(self.compress_num_induce, self.compress_embed_dim, self.compress_num_heads, self.use_layernorm, self.pre_layernorm, self.use_keras_mha)
+        self.compresser = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds,embed_dim=self.embed_dim,num_heads=self.num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha, is_final_block=True)
         
     def call(self, current_state, previous_state):
         if previous_state is None:
@@ -93,10 +94,8 @@ class Attention(keras.layers.Layer):
             self.attention = (Set_Transformer.SetAttentionBlock(embed_dim=self.embed_dim, num_heads=self.num_heads, use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm,use_keras_mha=self.use_keras_mha))
         else:
             self.attention = Set_Transformer.InducedSetAttentionBlock(embed_dim=self.embed_dim, num_heads=self.num_heads, num_induce=self.num_induce, use_layernorm=self.use_layernorm, pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha)
-    
-    
+
     def call(self, data, mems=None):
-                
             attention = self.attention([data, mems])
                 
             return attention
@@ -132,16 +131,15 @@ class TransformerXLBlock(tf.keras.layers.Layer):
 
         return attention_output
 
-
 class TransformerXL(tf.keras.layers.Layer):
     def __init__(self,
                  mem_switched, 
+                 num_seeds,
                  num_layers,
                  num_induce,
                  embed_dim,
                  num_heads,
                  dropout_rate,
-                 mem_len=None,
                  use_layernorm=True,
                  pre_layernorm=True, 
                  use_keras_mha=True):
@@ -149,20 +147,20 @@ class TransformerXL(tf.keras.layers.Layer):
         super(TransformerXL, self).__init__()
 
         self.mem_switched = mem_switched
+        self.num_seeds = num_seeds
         self.num_layers = num_layers
         self.num_induce = num_induce
         self.embed_dim = embed_dim
         self.num_heads = num_heads
         self.dropout_rate = dropout_rate
-        self.mem_len = mem_len
         self.use_layernorm = use_layernorm
         self.pre_layernorm = pre_layernorm
         self.use_keras_mha = use_keras_mha
 
         self.compresser = Compress_Memory
         
-        self.compress_mems = self.compresser(200,
-                                        64,
+        self.compress_mems = self.compresser(self.num_seeds,
+                                        self.embed_dim,
                                         self.num_heads,
                                         self.use_layernorm,
                                         self.pre_layernorm, 
@@ -208,10 +206,11 @@ class TransformerXL(tf.keras.layers.Layer):
         return output_stream, new_mems
 
 class XlModel(keras.Model):
-    def __init__(self, mem_switched, max_files, encoder, block_size, max_set_len, num_induce, embed_dim, num_layers, num_heads, mem_len, dropout_rate, num_seeds, use_layernorm, pre_layernorm, use_keras_mha):
+    def __init__(self, mem_switched, num_seeds_mems, max_files, encoder, block_size, max_set_len, num_induce, embed_dim, num_layers, num_heads, dropout_rate, num_seeds_output, use_layernorm, pre_layernorm, use_keras_mha):
         super(XlModel, self).__init__()
         
         self.mem_switched = mem_switched
+        self.num_seeds_mems = num_seeds_mems
         self.max_files = max_files
         self.encoder = encoder
         self.block_size = block_size
@@ -220,9 +219,8 @@ class XlModel(keras.Model):
         self.embed_dim = embed_dim
         self.num_layers = num_layers
         self.num_heads = num_heads
-        self.mem_len = mem_len
         self.dropout_rate = dropout_rate
-        self.num_seeds = num_seeds
+        self.num_seeds_output = num_seeds_output
         self.use_layernorm = use_layernorm
         self.pre_layernorm = pre_layernorm
         self.use_keras_mha = use_keras_mha
@@ -232,18 +230,18 @@ class XlModel(keras.Model):
         self.linear_layer = keras.layers.Dense(self.embed_dim)
         
         self.transformer_xl = TransformerXL(self.mem_switched,
+                                            self.num_seeds_mems,
                                             self.num_layers,
                                              self.num_induce,
                                              self.embed_dim,
                                              self.num_heads,
                                              self.dropout_rate,
-                                             self.mem_len,
                                              self.use_layernorm,
                                              self.pre_layernorm,
                                              self.use_keras_mha)
         
 
-        self.pooling_layer = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds,embed_dim=self.embed_dim,num_heads=self.num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha, is_final_block=True)
+        self.pooling_layer = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds_output,embed_dim=self.embed_dim,num_heads=self.num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha, is_final_block=True)
     
         self.reshape_layer = keras.layers.Reshape((self.embed_dim,))
    
@@ -252,7 +250,7 @@ class XlModel(keras.Model):
     
     def call(self, x, training=None):        
  
-        mems = tf.zeros((self.num_layers, tf.shape(x)[0], self.mem_len, self.embed_dim))
+        mems = tf.zeros((self.num_layers, tf.shape(x)[0], self.num_seeds_mems, self.embed_dim))
     
         embeddings = self.embedding_layer(x)
 
@@ -262,7 +260,7 @@ class XlModel(keras.Model):
             block = linear_transform[:,i:i+self.block_size]
             
             output, mems = self.transformer_xl(content_stream=block, state=mems)
-        
+            
         pooling = self.pooling_layer(output)
 
         reshape = self.reshape_layer(pooling)

@@ -31,15 +31,15 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
+    cli.argument("--num_seeds_mem", type=int, default=200)
     cli.argument("--block_size", type=int, default = 200)
     cli.argument("--max_set_len", type=int, default = 1000)
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
-    cli.argument("--mem_len", type=int, default = 200)
     cli.argument("--dropout_rate", type=float, default = 0.01)
-    cli.argument("--num_seeds", type=int, default = 1)
+    cli.argument("--num_seeds_output", type=int, default = 1)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--use_keras_mha", type=tfu.utils.str_to_bool, default = True)
@@ -93,7 +93,8 @@ def train(config):
         
         max_files = len(trimmed_samples)
         
-        model = XlModel(config.mem_switched, max_files, encoder, config.block_size, config.max_set_len, config.num_induce, config.embed_dim, config.num_layers, config.num_heads, config.mem_len, config.dropout_rate, config.num_seeds, config.use_layernorm, config.pre_layernorm, config.use_keras_mha)
+        model = XlModel(config.mem_switched, config.num_seeds_mem, max_files, encoder, config.block_size, config.max_set_len, config.num_induce, config.embed_dim, config.num_layers, config.num_heads, config.dropout_rate, config.num_seeds_output, config.use_layernorm, config.pre_layernorm, config.use_keras_mha)
+
         
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3), 
                         metrics=keras.metrics.SparseCategoricalAccuracy())
