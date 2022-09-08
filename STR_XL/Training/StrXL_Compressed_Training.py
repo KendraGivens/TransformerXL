@@ -34,7 +34,7 @@ def define_arguments(cli):
     cli.argument("--num_seeds_mem", type=int, default=400)
     cli.argument("--block_size", type=int, default = 200)
     cli.argument("--max_set_len", type=int, default = 1000)
-    cli.argument("--num_induce", type=int, default = 48)
+    cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)

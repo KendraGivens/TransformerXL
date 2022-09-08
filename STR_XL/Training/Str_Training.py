@@ -40,7 +40,7 @@ def define_arguments(cli):
     cli.argument("--num_seeds", type=int, default = 1)    
     cli.argument("--pooling_num_heads", type=int, default = 1)
 
-    cli.argument("--set_len", type=int, default=1000)
+    cli.argument("--set_len", type=int, default=800)
     
     cli.argument("--batches_per_epoch", type=int, default=20)
     cli.argument("--validation_batch_size", type=int, default=5)
