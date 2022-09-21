@@ -37,7 +37,7 @@ def define_arguments(cli):
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
-    cli.argument("--mem_len", type=int, default = 400)
+    cli.argument("--mem_len", type=int, default = 20)
     cli.argument("--dropout_rate", type=float, default = 0.01)
     cli.argument("--num_seeds", type=int, default = 1)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
@@ -98,7 +98,7 @@ def train(config):
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3), 
                         metrics=keras.metrics.SparseCategoricalAccuracy())
         
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_weights_only=True)])
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_model=False)])
 
 
         if config.save_to != None:
