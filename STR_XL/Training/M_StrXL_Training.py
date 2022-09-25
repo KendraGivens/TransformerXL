@@ -99,11 +99,11 @@ def train(config):
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3), 
                         metrics=keras.metrics.SparseCategoricalAccuracy())
         
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_weights_only=True)])
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_model=False)])
 
 
         if config.save_to != None:
-            model.save_weights(tf.scripting.path_to(config.save_to) + ".h5")
+            model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
     config = tfu.scripting.init(argv[1:], define_arguments)

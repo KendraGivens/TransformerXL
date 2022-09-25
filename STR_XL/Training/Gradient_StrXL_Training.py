@@ -101,7 +101,7 @@ def train(config):
         Gradient_StrXL.Training(model, train_dataset, val_dataset, config.epochs)
         
         if config.save_to != None:
-            model.save_weights(tf.scripting.path_to(config.save_to) + ".h5")
+            model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
     config = tfu.scripting.init(argv[1:], define_arguments)

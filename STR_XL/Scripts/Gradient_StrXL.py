@@ -57,6 +57,7 @@ class Create_Embeddings():
         embeddings = self.modify_data_for_input(data)
         return embeddings
 
+
 def Cache_Memory(current_state, previous_state, memory_length):
     if memory_length is None or memory_length == 0:
         return None
@@ -122,6 +123,7 @@ class TransformerXLBlock(tf.keras.layers.Layer):
         attention_output = self.attention_layer(content_stream, state)
 
         return attention_output
+
 
 class TransformerXL(keras.layers.Layer):
     def __init__(self,
@@ -252,7 +254,6 @@ def train_step(inputs):
     #Iterate through subbatches
     #Pull out one set at a time
     for i in range (batch_size[0]):
-        print("Building:", i)
         n = i + subbatch_size
         one_set = (batch[0][i:n], batch[1][i:n]) 
         x, y = one_set
@@ -279,8 +280,8 @@ def train_step(inputs):
                 segment_output, mems = model(embeddings, mems, index, True)
 
                 loss = loss_function(y, segment_output)
-                accuracy = accuracy_function(y, segment_output)
                 
+                #Set loss
                 total_loss += loss
 
             #Compute segment level gradients
@@ -288,51 +289,50 @@ def train_step(inputs):
 
             accum_grads = [(gs + ags) for gs, ags in zip(grads, accum_grads)]    
 
-        total_accuracy += accuracy 
-            
+        total_accuracy += accuracy_function(y, segment_output)
+        
         #Apply gradients
         model.optimizer.apply_gradients(zip(accum_grads, model.trainable_weights))
-        
-    return total_loss, total_accuracy/batch_size[0]
+
+    return total_loss, total_accuracy
 
 @tf.function()
-def val_step(inputs):
+def test_step(inputs):
     batch, max_set_len, seg_size = inputs
     
     #Iterate through subbatches
     #Pull out one set at a time
-    for i in range (batch_size[0]):
+    for i in range (batch_size[1]):
         n = i + subbatch_size
         one_set = (batch[0][i:n], batch[1][i:n]) 
         x, y = one_set
         i += 1
-        
+
         #Initialize mems
         mems = tf.zeros((num_layers, tf.shape(x)[0], mem_len, embed_dim))
-        
+
         #Initialize embeddings
         embeddings = embedder(x)
-    
+
         total_loss = 0.0
         total_accuracy = 0.0
-    
+
         #Split set into segments
         for index in range(0, max_set_len, seg_size):
-            
+
             #Pass entire set (for embeddings) and memories into model
             segment_output, mems = model(embeddings, mems, index, True)
 
             loss = loss_function(y, segment_output)
-            accuracy = accuracy_function(y, segment_output)
 
+            #Set loss
             total_loss += loss
-        total_accuracy += accuracy 
 
-    return total_loss, total_accuracy/batch_size[0]
+        total_accuracy += accuracy_function(y, segment_output)
 
+    return total_loss, total_accuracy
 
-def Training(model, train_dataset, val_dataset, epochs)
-    
+def Training((model, train_dataset, val_dataset, epochs):
     loss_function = keras.losses.SparseCategoricalCrossentropy(from_logits=False)
     accuracy_function = keras.metrics.SparseCategoricalAccuracy()
     
@@ -341,11 +341,10 @@ def Training(model, train_dataset, val_dataset, epochs)
     e = embedder(train_dataset[0][0])
     mems = tf.zeros((num_layers, tf.shape(e)[0], mem_len, embed_dim))
     e = model(e, mems, 0)
-    
-    for epoch in range(epochs):    
-        total_loss = 0.0
-        total_accuracy = 0.0
 
+    for epoch in range(epochs):    
+        loss = 0.0
+        accuracy = 0.0
         i = 0
 
         #Iterate through batches
@@ -354,16 +353,11 @@ def Training(model, train_dataset, val_dataset, epochs)
             i += 1
             #Pass one batch intro train_step
             loss, accuracy = train_step([batch, max_set_len, seg_size])
-            
-            total_loss += loss
-            total_accuracy += accuracy
 
-            print(f"\r{epoch+1}/{epochs} batch: {i}/{len(train_dataset)} Train Loss: {loss} Train Accuracy = {accuracy}", end="")
+            print(f"\r{epoch+1}/{epochs} training batch: {i}/{len(train_dataset)} Train Loss: {loss} Train Accuracy = {accuracy}", end="")
 
-        total_accuracy = total_accuracy/tf.shape(batch[0])[0]
-            
-        total_val_loss = 0.0
-        total_val_accuracy = 0.0
+        loss = 0.0
+        accuracy = 0.0
         i = 0
 
         #Iterate through batches
@@ -371,13 +365,8 @@ def Training(model, train_dataset, val_dataset, epochs)
 
             i += 1
             #Pass one batch intro train_step
-            val_loss, val_accuracy = val_step([batch, max_set_len, seg_size])
-            
-            total_val_loss += val_loss
-            total_val_accuracy += val_accuracy
+            loss, accuracy = test_step([batch, max_set_len, seg_size])
 
-            print(f"\r{epoch+1}/{epochs} batch: {i}/{len(train_dataset)} Val Loss: {val_loss} Val Accuracy = {val_accuracy}", end="")
-            
-        total_val_accuracy = total_val_loss/tf.shape(batch[0])[0]
-        
-        wandb.run.log({"loss":total_loss, "val_loss":total_val_loss, "accuracy":total_accuracy, "val_accuracy":total_val_accuracy, "epoch":epoch+1}
+            print(f"\r{epoch+1}/{epochs} testing batch: {i}/{len(val_dataset)} Val Loss: {loss} Val Accuracy = {accuracy}", end="")
+
+              wandb.run.log({"loss":total_loss, "val_loss":total_val_loss, "accuracy":total_accuracy, "val_accuracy":total_val_accuracy, "epoch":epoch+1}
