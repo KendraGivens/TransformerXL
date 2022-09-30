@@ -28,6 +28,8 @@ from core.custom_objects import CustomObject
 
 import tf_utils as tfu
 
+strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
+
 class Create_Embeddings():
     def __init__(self, encoder):
         super(Create_Embeddings, self).__init__()

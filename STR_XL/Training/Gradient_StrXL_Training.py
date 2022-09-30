@@ -22,6 +22,8 @@ import wandb
 
 from Scripts.Gradient_StrXL import *
 
+strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
+
 def define_arguments(cli):
     cli.use_strategy()
 
