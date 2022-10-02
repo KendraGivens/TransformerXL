@@ -1,6 +1,7 @@
 import sys
 import tf_utils as tfu
 import os
+import dotenv
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
 
@@ -33,7 +34,7 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=True)
-    cli.argument("--num_seeds_mem", type=int, default=400)
+    cli.argument("--num_seeds_mem", type=int, default=200)
     cli.argument("--block_size", type=int, default = 200)
     cli.argument("--max_set_len", type=int, default = 1000)
     cli.argument("--num_induce", type=int, default = 0)
@@ -53,7 +54,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=10000, batch_size=20)
+    cli.use_training(epochs=500, batch_size=20)
     
    
 def load_dataset(config):
@@ -74,7 +75,7 @@ def load_dataset(config):
 
     rng.shuffle(random_samples)
 
-    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, 
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples[0:20], split_ratios=split_ratios, 
                                                     subsample_length=set_len, sequence_length=sequence_len, kmer=kmer,
                                                     batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
 
@@ -108,6 +109,7 @@ def train(config):
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
+    dotenv.load_dotenv()
     config = tfu.scripting.init(argv[1:], define_arguments)
     tfu.scripting.random_seed(config.seed)
     

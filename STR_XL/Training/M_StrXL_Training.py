@@ -20,6 +20,8 @@ from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
 
+import dotenv
+
 from Scripts.StrXL import *
 
 strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
@@ -54,7 +56,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=10000, batch_size=20)
+    cli.use_training(epochs=500, batch_size=20)
     
    
 def load_dataset(config):
@@ -75,7 +77,7 @@ def load_dataset(config):
 
     rng.shuffle(random_samples)
 
-    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, 
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples[0:20], split_ratios=split_ratios, 
                                                     subsample_length=set_len, sequence_length=sequence_len, kmer=kmer,
                                                     batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
 
@@ -108,6 +110,7 @@ def train(config):
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
+    dotenv.load_dotenv()
     config = tfu.scripting.init(argv[1:], define_arguments)
     tfu.scripting.random_seed(config.seed)
     

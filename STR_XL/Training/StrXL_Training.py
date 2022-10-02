@@ -21,6 +21,8 @@ from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
 
+import dotenv
+
 from Scripts.StrXL import *
 
 strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
@@ -108,6 +110,7 @@ def train(config):
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
+    dotenv.load_dotenv()
     config = tfu.scripting.init(argv[1:], define_arguments)
     tfu.scripting.random_seed(config.seed)
     

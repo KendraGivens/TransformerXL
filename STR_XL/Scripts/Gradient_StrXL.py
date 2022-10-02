@@ -334,7 +334,7 @@ def test_step(inputs):
 
     return total_loss, total_accuracy
 
-def Training((model, train_dataset, val_dataset, epochs):
+def Training(model, train_dataset, val_dataset, epochs):
     loss_function = keras.losses.SparseCategoricalCrossentropy(from_logits=False)
     accuracy_function = keras.metrics.SparseCategoricalAccuracy()
     
@@ -371,4 +371,4 @@ def Training((model, train_dataset, val_dataset, epochs):
 
             print(f"\r{epoch+1}/{epochs} testing batch: {i}/{len(val_dataset)} Val Loss: {loss} Val Accuracy = {accuracy}", end="")
 
-              wandb.run.log({"loss":total_loss, "val_loss":total_val_loss, "accuracy":total_accuracy, "val_accuracy":total_val_accuracy, "epoch":epoch+1}
+            wandb.run.log({"loss":total_loss, "val_loss":total_val_loss, "accuracy":total_accuracy, "val_accuracy":total_val_accuracy, "epoch":epoch+1})
