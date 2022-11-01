@@ -53,13 +53,13 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=10000, batch_size=20)
+    cli.use_training(epochs=1, batch_size=20)
     
    
 def load_dataset(config):
     dataset_path = tfu.scripting.artifact(config, "dataset")
     
-    samples = find_dbs(dataset_path + '/train')
+    samples = find_dbs(dataset_path)
     
     split_ratios = [0.8, 0.2]
     set_len = config.set_len

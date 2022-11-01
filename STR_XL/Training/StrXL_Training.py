@@ -20,6 +20,7 @@ from common import dna
 from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
+import dotenv
 
 from Scripts.StrXL import *
 
@@ -34,33 +35,33 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
-    cli.argument("--block_size", type=int, default = 200)
-    cli.argument("--max_set_len", type=int, default = 1000)
+    cli.argument("--block_size", type=int, default = 500)
+    cli.argument("--max_set_len", type=int, default = 4000)
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
-    cli.argument("--mem_len", type=int, default = 200)
+    cli.argument("--mem_len", type=int, default = 500)
     cli.argument("--dropout_rate", type=float, default = 0.01)
     cli.argument("--num_seeds", type=int, default = 1)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--use_keras_mha", type=tfu.utils.str_to_bool, default = True)
 
-    cli.argument("--set_len", type=int, default=1000)
+    cli.argument("--set_len", type=int, default=4000)
     
     cli.argument("--batches_per_epoch", type=int, default=20)
     cli.argument("--validation_batch_size", type=int, default=5)
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=500, batch_size=20)
+    cli.use_training(epochs=150, batch_size=20)
     
    
 def load_dataset(config):
     dataset_path = tfu.scripting.artifact(config, "dataset")
     
-    samples = find_dbs(dataset_path + '/train')
+    samples = find_dbs(dataset_path)
     
     split_ratios = [0.8, 0.2]
     set_len = config.set_len
@@ -108,6 +109,7 @@ def train(config):
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
+    dotenv.load_dotenv()
     config = tfu.scripting.init(argv[1:], define_arguments)
     tfu.scripting.random_seed(config.seed)
     

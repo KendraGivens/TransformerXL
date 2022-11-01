@@ -33,9 +33,9 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=True)
-    cli.argument("--num_seeds_mem", type=int, default=400)
-    cli.argument("--block_size", type=int, default = 200)
-    cli.argument("--max_set_len", type=int, default = 1000)
+    cli.argument("--num_seeds_mem", type=int, default=500)
+    cli.argument("--block_size", type=int, default = 500)
+    cli.argument("--max_set_len", type=int, default = 4000)
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
@@ -46,20 +46,20 @@ def define_arguments(cli):
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--use_keras_mha", type=tfu.utils.str_to_bool, default = True)
 
-    cli.argument("--set_len", type=int, default=1000)
+    cli.argument("--set_len", type=int, default=4000)
     
     cli.argument("--batches_per_epoch", type=int, default=20)
     cli.argument("--validation_batch_size", type=int, default=5)
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=10000, batch_size=20)
+    cli.use_training(epochs=500, batch_size=20)
     
    
 def load_dataset(config):
     dataset_path = tfu.scripting.artifact(config, "dataset")
     
-    samples = find_dbs(dataset_path + '/train')
+    samples = find_dbs(dataset_path)
     
     split_ratios = [0.8, 0.2]
     set_len = config.set_len
@@ -74,7 +74,7 @@ def load_dataset(config):
 
     rng.shuffle(random_samples)
 
-    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, 
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples[0:20], split_ratios=split_ratios, 
                                                     subsample_length=set_len, sequence_length=sequence_len, kmer=kmer,
                                                     batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
 
