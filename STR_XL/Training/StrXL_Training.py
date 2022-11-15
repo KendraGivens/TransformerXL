@@ -24,8 +24,6 @@ import dotenv
 
 from Scripts.StrXL import *
 
-strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
-
 def define_arguments(cli):
     cli.use_strategy()
     
@@ -35,27 +33,27 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
-    cli.argument("--block_size", type=int, default = 500)
-    cli.argument("--max_set_len", type=int, default = 4000)
+    cli.argument("--block_size", type=int, default = 250)
+    cli.argument("--max_set_len", type=int, default = 1000)
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
-    cli.argument("--mem_len", type=int, default = 500)
+    cli.argument("--mem_len", type=int, default = 250)
     cli.argument("--dropout_rate", type=float, default = 0.01)
     cli.argument("--num_seeds", type=int, default = 1)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--use_keras_mha", type=tfu.utils.str_to_bool, default = True)
 
-    cli.argument("--set_len", type=int, default=4000)
+    cli.argument("--set_len", type=int, default=1000)
     
     cli.argument("--batches_per_epoch", type=int, default=20)
     cli.argument("--validation_batch_size", type=int, default=5)
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=150, batch_size=20)
+    cli.use_training(epochs=1, batch_size=20)
     
    
 def load_dataset(config):
@@ -76,7 +74,7 @@ def load_dataset(config):
 
     rng.shuffle(random_samples)
 
-    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples[0:20], split_ratios=split_ratios, 
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, 
                                                     subsample_length=set_len, sequence_length=sequence_len, kmer=kmer,
                                                     batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
 

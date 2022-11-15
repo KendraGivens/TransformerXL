@@ -24,8 +24,6 @@ import wandb
 
 import tf_utils as tfu
 
-strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
-
 class Create_Embeddings(keras.layers.Layer):
     def __init__(self, encoder):
         super(Create_Embeddings, self).__init__()
@@ -59,6 +57,21 @@ class Create_Embeddings(keras.layers.Layer):
     def call(self, data):
         return  self.modify_data_for_input(data)
 
+class DnaSampleBlockGenerator(DnaSampleGenerator):
+    def __init__(self, *args, block_size=1000, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.block_size = block_size
+        self.num_blocks = self.subsample_length // self.block_size
+        assert self.subsample_length % self.block_size == 0
+    
+    def post_process_batch(self, batch, batch_index):
+        x_shape = (self.num_blocks*self.batch_size, self.block_size, -1)
+        if self.labels is None:
+            return np.reshape(batch[0], x_shape)
+        x = np.reshape(batch[0], x_shape)
+        y = np.repeat(batch[1], self.num_blocks)
+        return (x, y)
+    
 class Set_Transformer_Model(keras.Model):
     def __init__(self, num_induce, embed_dim, attention_num_heads, stack, use_layernorm, pre_layernorm, use_keras_mha, encoder, max_files, num_seeds, pooling_num_heads):
         super(Set_Transformer_Model, self).__init__()
