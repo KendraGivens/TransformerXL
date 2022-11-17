@@ -19,6 +19,7 @@ from common import dna
 from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
+import dotenv
 
 from Scripts.Str import *
 
@@ -41,19 +42,18 @@ def define_arguments(cli):
     cli.argument("--pooling_num_heads", type=int, default = 1)
 
     cli.argument("--set_len", type=int, default=1000)
-    
     cli.argument("--batches_per_epoch", type=int, default=20)
     cli.argument("--validation_batch_size", type=int, default=5)
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=1000, batch_size=20)
+    cli.use_training(epochs=1200, batch_size=20)
     
    
 def load_dataset(config):
     dataset_path = tfu.scripting.artifact(config, "dataset")
     
-    samples = find_dbs(dataset_path + '/train')
+    samples = find_dbs(dataset_path)
     
     split_ratios = [0.8, 0.2]
     set_len = config.set_len
@@ -67,10 +67,8 @@ def load_dataset(config):
     random_samples = samples.copy()
 
     rng.shuffle(random_samples)
-
-    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, 
-                                                    subsample_length=set_len, sequence_length=sequence_len, kmer=kmer,
-                                                    batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
+    
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, subsample_length=set_len, sequence_length=sequence_len, kmer=kmer, batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
 
 
     return trimmed_samples, train_dataset, val_dataset
@@ -93,13 +91,13 @@ def train(config):
         model.compile(optimizer=keras.optimizers.Adam(1e-3),loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics = [keras.metrics.sparse_categorical_accuracy])
        
         
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_model=False)])
-
-
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=500, verbose=1, callbacks = [wandb.keras.WandbCallback(save_model=False)])
+    
         if config.save_to != None:
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
+    dotenv.load_dotenv()
     config = tfu.scripting.init(argv[1:], define_arguments)
     tfu.scripting.random_seed(config.seed)
     
