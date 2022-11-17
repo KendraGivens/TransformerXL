@@ -91,7 +91,7 @@ def train(config):
         model.compile(optimizer=keras.optimizers.Adam(1e-3),loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics = [keras.metrics.sparse_categorical_accuracy])
        
         
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks = [wandb.keras.WandbCallback(save_model=False)])
+       tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, initial_epoch=last_epoch, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks = [wandb.keras.WandbCallback(save_model=False)])
     
 
 
