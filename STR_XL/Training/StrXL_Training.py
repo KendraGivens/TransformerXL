@@ -53,7 +53,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=1, batch_size=20)
+    cli.use_training(epochs=1200, batch_size=20)
     
    
 def load_dataset(config):

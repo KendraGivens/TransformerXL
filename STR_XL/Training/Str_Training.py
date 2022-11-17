@@ -47,7 +47,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=500, batch_size=20)
+    cli.use_training(epochs=1000, batch_size=20)
     
    
 def load_dataset(config):
@@ -91,7 +91,7 @@ def train(config):
         model.compile(optimizer=keras.optimizers.Adam(1e-3),loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics = [keras.metrics.sparse_categorical_accuracy])
        
         
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=500, verbose=1, callbacks = [wandb.keras.WandbCallback(save_model=False)])
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks = [wandb.keras.WandbCallback(save_model=False)])
     
         if config.save_to != None:
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
