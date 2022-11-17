@@ -2,6 +2,7 @@ artifacts/
 Dataset/
 Statistics/
 wandb/
+STR_XL/Training/~
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

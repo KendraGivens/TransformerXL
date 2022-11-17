@@ -33,8 +33,8 @@ def define_arguments(cli):
     
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
-    cli.argument("--attention_num_heads", type=int, default = 6)
-    cli.argument("--stack", type=int, default = 6)
+    cli.argument("--attention_num_heads", type=int, default = 8)
+    cli.argument("--stack", type=int, default = 8)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--use_keras_mha", type=tfu.utils.str_to_bool, default = True)  
@@ -42,14 +42,12 @@ def define_arguments(cli):
     cli.argument("--pooling_num_heads", type=int, default = 1)
 
     cli.argument("--set_len", type=int, default=1000)
-    cli.argument("--block_size", type=int, default=500)
-    
     cli.argument("--batches_per_epoch", type=int, default=20)
     cli.argument("--validation_batch_size", type=int, default=5)
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=1, batch_size=20)
+    cli.use_training(epochs=500, batch_size=20)
     
    
 def load_dataset(config):
@@ -59,7 +57,6 @@ def load_dataset(config):
     
     split_ratios = [0.8, 0.2]
     set_len = config.set_len
-    block_size = config.block_size
     sequence_len = 150
     kmer = 3
     batch_size = [config.batch_size, config.validation_batch_size]
@@ -70,9 +67,9 @@ def load_dataset(config):
     random_samples = samples.copy()
 
     rng.shuffle(random_samples)
-
-    trimmed_samples, (train_dataset, val_dataset) = DnaSampleBlockGenerator.split(block_size=block_size, samples=random_samples[0:20], split_ratios=split_ratios, subsample_length=set_len, sequence_length=sequence_len,kmer=kmer,batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng) 
     
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, subsample_length=set_len, sequence_length=sequence_len, kmer=kmer, batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
+
 
     return trimmed_samples, train_dataset, val_dataset
     
