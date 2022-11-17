@@ -22,9 +22,6 @@ import wandb
 
 from Scripts.Str import *
 
-strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
-
-
 def define_arguments(cli):
     cli.use_strategy()
     
@@ -33,10 +30,10 @@ def define_arguments(cli):
     
     cli.argument("--seed", type=int, default = None)
     
-    cli.argument("--num_induce", type=int, default = 48)
+    cli.argument("--num_induce", type=int, default = 32)
     cli.argument("--embed_dim", type=int, default = 64)
-    cli.argument("--attention_num_heads", type=int, default = 6)
-    cli.argument("--stack", type=int, default = 6)
+    cli.argument("--attention_num_heads", type=int, default = 8)
+    cli.argument("--stack", type=int, default = 8)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--pre_layernorm", type=tfu.utils.str_to_bool, default = True)
     cli.argument("--use_keras_mha", type=tfu.utils.str_to_bool, default = True)  
@@ -50,7 +47,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=10000, batch_size=20)
+    cli.use_training(epochs=1000, batch_size=20)
     
    
 def load_dataset(config):
