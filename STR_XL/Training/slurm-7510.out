@@ -1,0 +1,24 @@
+wandb: Currently logged in as: kendragivens. Use `wandb login --relogin` to force relogin
+wandb: wandb version 0.13.6 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.4
+wandb: Run data is saved locally in /home/klg6z/work/work/TransformerXL/STR_XL/Training/wandb/run-20221208_234639-3jg2by3t
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run comic-haze-70
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/Str
+wandb: 🚀 View run at https://wandb.ai/kendragivens/Str/runs/3jg2by3t
+wandb: Downloading large artifact nachusa-dna:latest, 4079.09MB. 420 files... 
+wandb:   420 of 420 files downloaded.  
+Done. 0:0:0.1
+wandb:   5 of 5 files downloaded.  
+0
+Using GPU Strategy. Selected GPUs: [0]
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes44-PCRblank3_S45_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley049-SB-100420_S188_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley056-NegCtrl_S195_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Epoch 1/1000
+slurmstepd: error: *** JOB 7510 ON compute01 CANCELLED AT 2022-12-08T23:47:30 ***

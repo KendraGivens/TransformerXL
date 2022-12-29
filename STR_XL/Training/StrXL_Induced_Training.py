@@ -1,5 +1,5 @@
 import sys
-import tf_utils as tfu
+import tf_utilities as tfu
 import os
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -47,18 +47,18 @@ def define_arguments(cli):
 
     cli.argument("--set_len", type=int, default=1000)
     
-    cli.argument("--batches_per_epoch", type=int, default=1)
-    cli.argument("--validation_batch_size", type=int, default=1)
+    cli.argument("--batches_per_epoch", type=int, default=20)
+    cli.argument("--validation_batch_size", type=int, default=5)
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=1, batch_size=20)
+    cli.use_training(epochs=500, batch_size=20)
     
    
 def load_dataset(config):
     dataset_path = tfu.scripting.artifact(config, "dataset")
     
-    samples = find_dbs(dataset_path + '/train')
+    samples = find_dbs(dataset_path)
     
     split_ratios = [0.8, 0.2]
     set_len = config.set_len
@@ -106,7 +106,7 @@ def train(config):
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
-    config = tfu.scripting.init(argv[1:], define_arguments)
+    config = tfu.scripting.init(define_arguments)
     tfu.scripting.random_seed(config.seed)
     
     print(tfu.scripting.initial_epoch(config))

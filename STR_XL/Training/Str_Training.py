@@ -1,5 +1,5 @@
 import sys
-import tf_utils as tfu
+import tf_utilities as tfu
 import os
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -47,7 +47,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=1000, batch_size=20)
+    cli.use_training(epochs=3000, batch_size=20)
     
    
 def load_dataset(config):
@@ -86,19 +86,23 @@ def train(config):
         encoder.trainable = False
         
         max_files = len(trimmed_samples)
-        
-        model = Set_Transformer_Model(config.num_induce, config.embed_dim, config.attention_num_heads, config.stack, config.use_layernorm, config.pre_layernorm, config.use_keras_mha, encoder, max_files, config.num_seeds, config.pooling_num_heads)
+   
+      #  model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath, save_weights_only=True,
+    #mode='max',
+   # save_best_only=True)
+
+        model = Set_Transformer_Model(config.num_induce, config.embed_dim, config.attention_num_heads, config.stack, config.use_layernorm, config.pre_layernorm,config.use_keras_mha, encoder, max_files, config.num_seeds, config.pooling_num_heads)
         model.compile(optimizer=keras.optimizers.Adam(1e-3),loss=keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics = [keras.metrics.sparse_categorical_accuracy])
        
-        
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks = [wandb.keras.WandbCallback(save_model=False)])
+    
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=0, verbose=1, callbacks = [wandb.keras.WandbCallback(save_model=False)])
     
         if config.save_to != None:
             model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
     
 def main(argv):
     dotenv.load_dotenv()
-    config = tfu.scripting.init(argv[1:], define_arguments)
+    config = tfu.scripting.init(define_arguments)
     tfu.scripting.random_seed(config.seed)
     
     print(tfu.scripting.initial_epoch(config))

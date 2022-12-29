@@ -24,9 +24,7 @@ from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
 
-import tf_utils as tfu
-
-strategy = tfu.devices.select_gpu(0, use_dynamic_memory=True)
+import tf_utilities as tfu
 
 class Create_Embeddings(keras.layers.Layer):
     def __init__(self, encoder):

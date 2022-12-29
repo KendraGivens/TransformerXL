@@ -1,5 +1,5 @@
 import sys
-import tf_utils as tfu
+import tf_utilities as tfu
 import os
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
@@ -53,7 +53,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=1200, batch_size=20)
+    cli.use_training(epochs=3000, batch_size=20)
     
    
 def load_dataset(config):
@@ -108,7 +108,7 @@ def train(config):
     
 def main(argv):
     dotenv.load_dotenv()
-    config = tfu.scripting.init(argv[1:], define_arguments)
+    config = tfu.scripting.init(define_arguments)
     tfu.scripting.random_seed(config.seed)
     
     print(tfu.scripting.initial_epoch(config))

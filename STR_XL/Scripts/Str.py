@@ -22,7 +22,7 @@ from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
 
-import tf_utils as tfu
+import tf_utilities as tfu
 
 class Create_Embeddings(keras.layers.Layer):
     def __init__(self, encoder):
