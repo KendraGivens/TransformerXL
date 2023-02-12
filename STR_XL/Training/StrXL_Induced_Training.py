@@ -34,8 +34,8 @@ def define_arguments(cli):
     cli.argument("--max_files", type=int, default = 205)
     cli.argument("--block_size", type=int, default = 250)
     cli.argument("--max_set_len", type=int, default = 1000)
-    cli.argument("--num_induce", type=int, default = 32)
-    cli.argument("--embed_dim", type=int, default = 64)
+    cli.argument("--num_induce", type=int, default = 64)
+    cli.argument("--embed_dim", type=int, default = 128)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
     cli.argument("--mem_len", type=int, default = 250)
@@ -52,7 +52,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=500, batch_size=20)
+    cli.use_training(epochs=900, batch_size=20)
     
    
 def load_dataset(config):

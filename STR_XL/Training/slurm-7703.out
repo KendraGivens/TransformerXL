@@ -1,0 +1,24 @@
+Matplotlib created a temporary config/cache directory at /tmp/matplotlib-aof04ctr because the default path (/home/jovyan/.cache/matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+wandb: Currently logged in as: kendragivens. Use `wandb login --relogin` to force relogin
+wandb: WARNING Tried to auto resume run with id 2na5ti6q but id 87qvp0ma is set.
+wandb: wandb version 0.13.9 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.13.4
+wandb: Run data is saved locally in /home/klg6z/work/work/TransformerXL/STR_XL/Training/wandb/run-20230207_120234-87qvp0ma
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fragrant-vortex-209
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL
+wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL/runs/87qvp0ma
+Restoring previous model...
+Traceback (most recent call last):
+  File "/home/klg6z/work/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 130, in <module>
+    sys.exit(tfu.scripting.boot(main, sys.argv))
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 104, in boot
+    return job(*args, **kwargs) or 0
+  File "/home/klg6z/work/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 120, in main
+    model_path = tfs.restore_dir(config.save_to)
+NameError: name 'tfs' is not defined
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: Synced fragrant-vortex-209: https://wandb.ai/kendragivens/StrXL/runs/87qvp0ma
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230207_120234-87qvp0ma/logs

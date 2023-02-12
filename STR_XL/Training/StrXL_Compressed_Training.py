@@ -31,7 +31,7 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=True)
-    cli.argument("--num_seeds_mem", type=int, default = 250)
+    cli.argument("--num_seeds_mem", type=int, default = 500)
     cli.argument("--block_size", type=int, default = 250)
     cli.argument("--max_set_len", type=int, default = 1000)
     cli.argument("--num_induce", type=int, default = 0)
@@ -46,12 +46,12 @@ def define_arguments(cli):
 
     cli.argument("--set_len", type=int, default=1000)
     
-    cli.argument("--batches_per_epoch", type=int, default=1)
-    cli.argument("--validation_batch_size", type=int, default=1)
+    cli.argument("--batches_per_epoch", type=int, default=20)
+    cli.argument("--validation_batch_size", type=int, default=5)
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=1, batch_size=20)
+    cli.use_training(epochs=900, batch_size=20)
     
    
 def load_dataset(config):

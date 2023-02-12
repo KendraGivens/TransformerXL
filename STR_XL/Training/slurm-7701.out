@@ -1,0 +1,4 @@
+  File "/home/klg6z/work/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 86
+    model = 
+            ^
+SyntaxError: invalid syntax

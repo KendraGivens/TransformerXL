@@ -1,4 +1,0 @@
-  File "/home/klg6z/work/work/TransformerXL/STR_XL/Training/Str_Training.py", line 94
-    model = Set_Transformer_Model(config.num_induce, config.embed_dim, config.attention_num_heads, config.stack, config.use_layernorm, config.pre_layernorm, config.use_keras_mha, encoder, max_files, config.num_seeds, config.pooling_num_heads)
-                                                                                                                                                                                                                                                  ^
-IndentationError: unindent does not match any outer indentation level

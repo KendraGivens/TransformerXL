@@ -26,7 +26,7 @@ from Scripts.StrXL import *
 
 def define_arguments(cli):
     cli.use_strategy()
-    
+
     cli.artifact("--dataset", type=str, required=True)
     cli.artifact("--encoder", type=str, required=True)
     
@@ -53,7 +53,7 @@ def define_arguments(cli):
     
     cli.argument("--save_to", type=str, default=None)
     
-    cli.use_training(epochs=3000, batch_size=20)
+    cli.use_training(epochs=900, batch_size=20)
     
    
 def load_dataset(config):
@@ -79,16 +79,15 @@ def load_dataset(config):
                                                     batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
 
 
-    return trimmed_samples, train_dataset, val_dataset
-    
-def train(config):
+    return trimmed_samples, train_dataset, val_dataset 
+
+def train(config, model_path):
     with tfu.scripting.strategy(config).scope():
         trimmed_samples, train_dataset, val_dataset = load_dataset(config)
         
-        
-        model_path = tfu.scripting.artifact(config, "encoder")
-        pretrained_model = dnabert.DnaBertModel.load(model_path)
-        pretrained_model.load_weights(model_path + "/model.h5")
+        encoder_path = tfu.scripting.artifact(config, "encoder")
+        pretrained_model = dnabert.DnaBertModel.load(encoder_path)
+        pretrained_model.load_weights(encoder_path + "/model.h5")
         
         encoder = dnabert.DnaBertEncoderModel(pretrained_model.base)
         encoder.trainable = False
@@ -96,11 +95,15 @@ def train(config):
         max_files = len(trimmed_samples)
         
         model = XlModel(config.mem_switched, max_files, encoder, config.block_size, config.max_set_len, config.num_induce, config.embed_dim, config.num_layers, config.num_heads, config.mem_len, config.dropout_rate, config.num_seeds, config.use_layernorm, config.pre_layernorm, config.use_keras_mha)
-        
-        model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3), 
+      
+        if model_path is not None:
+            model = model.load_weights(model_path + ".h5")
+ 
+        model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3),
                         metrics=keras.metrics.SparseCategoricalAccuracy())
-        
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_model=False)])
+
+              
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_model=False)])
 
 
         if config.save_to != None:
@@ -110,10 +113,17 @@ def main(argv):
     dotenv.load_dotenv()
     config = tfu.scripting.init(define_arguments)
     tfu.scripting.random_seed(config.seed)
-    
+
+    model_path = None
+    if tfu.scripting.is_resumed():
+        print("Restoring previous model...")
+        model_path = tfu.scripting.restore_dir(config.save_to)
+
+    print(model_path)
+
     print(tfu.scripting.initial_epoch(config))
     if tfu.scripting.initial_epoch(config) < config.epochs:
-        train(config)
+        train(config, model_path)
     
     
     
