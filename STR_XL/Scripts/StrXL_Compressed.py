@@ -165,7 +165,7 @@ class TransformerXL(tf.keras.layers.Layer):
                                         self.use_layernorm,
                                         self.pre_layernorm, 
                                         self.use_keras_mha)
-        
+
         self.transformer_xl_layers = []
         
         for i in range(self.num_layers):
@@ -187,7 +187,7 @@ class TransformerXL(tf.keras.layers.Layer):
 
         if state is None:
             state = [None] * self.num_layers
-            
+
         for i in range(self.num_layers):
             if self.mem_switched == False:
                 new_mems.append(self.compress_mems(content_stream, state[i]))
