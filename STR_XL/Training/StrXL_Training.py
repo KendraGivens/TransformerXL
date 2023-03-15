@@ -51,11 +51,11 @@ def define_arguments(cli):
     cli.argument("--batches_per_epoch", type=int, default=20)
     cli.argument("--validation_batch_size", type=int, default=5)
     
-    cli.argument("--save_to", type=str, default=None)
+    cli.argument("--save-to", type=str, default=None)
     
     cli.use_training(epochs=900, batch_size=20)
+
     
-   
 def load_dataset(config):
     dataset_path = tfu.scripting.artifact(config, "dataset")
     
@@ -76,7 +76,7 @@ def load_dataset(config):
 
     trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios, 
                                                     subsample_length=set_len, sequence_length=sequence_len, kmer=kmer,
-                                                    batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels, rng=rng)
+                                                    batch_size=batch_size,batches_per_epoch=batches_per_epoch,augment=augument,labels=labels,rng=rng)
 
 
     return trimmed_samples, train_dataset, val_dataset 
