@@ -1,0 +1,86 @@
+2023-04-02 20:01:01.310679: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230402_200107-21xh54co
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Resuming run 2 250
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL
+wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL/runs/21xh54co
+wandb: Downloading large artifact nachusa-dna:latest, 4079.09MB. 420 files... 
+wandb: \ 1 of 420 files downloaded...wandb: | 14 of 420 files downloaded...wandb: / 43 of 420 files downloaded...wandb: - 60 of 420 files downloaded...wandb: \ 64 of 420 files downloaded...wandb: | 69 of 420 files downloaded...wandb: / 82 of 420 files downloaded...wandb: - 102 of 420 files downloaded...wandb: \ 117 of 420 files downloaded...wandb: | 127 of 420 files downloaded...wandb: / 134 of 420 files downloaded...wandb: - 144 of 420 files downloaded...wandb: \ 166 of 420 files downloaded...wandb: | 174 of 420 files downloaded...wandb: / 175 of 420 files downloaded...wandb: - 184 of 420 files downloaded...wandb: \ 200 of 420 files downloaded...wandb: | 212 of 420 files downloaded...wandb: / 228 of 420 files downloaded...wandb: - 236 of 420 files downloaded...wandb: \ 244 of 420 files downloaded...wandb: | 259 of 420 files downloaded...wandb: / 274 of 420 files downloaded...wandb: - 286 of 420 files downloaded...wandb: \ 302 of 420 files downloaded...wandb: | 328 of 420 files downloaded...wandb: / 356 of 420 files downloaded...wandb: - 386 of 420 files downloaded...wandb: \ 392 of 420 files downloaded...wandb: | 401 of 420 files downloaded...wandb: / 413 of 420 files downloaded...wandb:   420 of 420 files downloaded.  
+Done. 0:0:4.4
+Restoring previous model...
+1000
+Using GPU Strategy. Selected GPUs: [0]
+Traceback (most recent call last):
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/../../../deep-learning-dna/common/data.py", line 91, in open_lmdb
+    return Lmdb.open(path, lock=lock)
+TypeError: Lmdb.open() got an unexpected keyword argument 'lock'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 134, in <module>
+    sys.exit(tfu.scripting.boot(main, sys.argv))
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 106, in boot
+    return job(*args, **kwargs) or 0
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 129, in main
+    train(config, model_path)
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 87, in train
+    trimmed_samples, train_dataset, val_dataset = load_dataset(config)
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 78, in load_dataset
+    trimmed_samples, (train_dataset, val_dataset) = DnaSampleGenerator.split(samples=random_samples, split_ratios=split_ratios,
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/../../../deep-learning-dna/common/data.py", line 326, in split
+    samples, generators = super().split(
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/../../../deep-learning-dna/common/data.py", line 119, in split
+    stores = [open_lmdb(s) for s in samples]
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/../../../deep-learning-dna/common/data.py", line 119, in <listcomp>
+    stores = [open_lmdb(s) for s in samples]
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/../../../deep-learning-dna/common/data.py", line 93, in open_lmdb
+    return Lmdb.open(path)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/lmdbm/lmdbm.py", line 78, in open
+    env = lmdb.open(file, map_size=map_size, max_dbs=1, readonly=True, create=False, mode=mode)
+lmdb.InvalidParameterError: mdb_txn_begin: Invalid argument
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: - 0.000 MB of 0.000 MB uploaded (0.000 MB deduped)wandb: \ 0.000 MB of 0.004 MB uploaded (0.000 MB deduped)wandb: | 10.549 MB of 10.549 MB uploaded (0.000 MB deduped)wandb: 
+wandb: Run summary:
+wandb:                      best_epoch 981
+wandb:                   best_val_loss 2.51992
+wandb:                           epoch 999
+wandb:                            loss 2.59826
+wandb:     sparse_categorical_accuracy 0.2375
+wandb:                        val_loss 2.65614
+wandb: val_sparse_categorical_accuracy 0.2
+wandb: 
+wandb: 🚀 View run 2 250 at: https://wandb.ai/kendragivens/StrXL/runs/21xh54co
+wandb: Synced 3 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: Find logs at: ./wandb/run-20230402_200107-21xh54co/logs
+Exception in thread NetStatThr:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/opt/conda/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 258, in check_network_status
+    self._loop_check_status(
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 214, in _loop_check_status
+    local_handle = request()
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface.py", line 795, in deliver_network_status
+    return self._deliver_network_status(status)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 601, in _deliver_network_status
+    return self._deliver_record(record)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 560, in _deliver_record
+    handle = mailbox._deliver_record(record, interface=self)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/mailbox.py", line 455, in _deliver_record
+    interface._publish(record)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe

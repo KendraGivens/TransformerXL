@@ -1,0 +1,25 @@
+2023-04-02 19:49:30.385191: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+usage: StrXL_Training.py [-h] [--gpus GPUS] [--wandb-project WANDB_PROJECT]
+                         [--wandb-name WANDB_NAME] [--wandb-group WANDB_GROUP]
+                         [--wandb-mode {online,offline,disabled}]
+                         [--resume RESUME]
+                         (--dataset-path DATASET_PATH | --dataset-artifact DATASET_ARTIFACT)
+                         (--encoder-path ENCODER_PATH | --encoder-artifact ENCODER_ARTIFACT)
+                         [--seed SEED] [--mem_switched MEM_SWITCHED]
+                         [--block_size BLOCK_SIZE] [--max_set_len MAX_SET_LEN]
+                         [--num_induce NUM_INDUCE] [--embed_dim EMBED_DIM]
+                         [--num_layers NUM_LAYERS] [--num_heads NUM_HEADS]
+                         [--mem_len MEM_LEN] [--dropout_rate DROPOUT_RATE]
+                         [--num_seeds NUM_SEEDS]
+                         [--use_layernorm USE_LAYERNORM]
+                         [--pre_layernorm PRE_LAYERNORM]
+                         [--use_keras_mha USE_KERAS_MHA] [--set_len SET_LEN]
+                         [--batches_per_epoch BATCHES_PER_EPOCH]
+                         [--validation_batch_size VALIDATION_BATCH_SIZE]
+                         [--save-to SAVE_TO] [--initial-epoch INITIAL_EPOCH]
+                         [--epochs EPOCHS] [--batch-size BATCH_SIZE]
+                         [--sub-batch-size SUB_BATCH_SIZE]
+                         [--data-workers DATA_WORKERS] [--run-eagerly]
+                         [--use-dynamic-memory]
+StrXL_Training.py: error: unrecognized arguments: --save_to StrXL_1

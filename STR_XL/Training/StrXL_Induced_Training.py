@@ -97,7 +97,6 @@ def train(config, model_path):
         
         model = XlModel(config.mem_switched, max_files, encoder, config.block_size, config.max_set_len, config.num_induce, config.embed_dim, config.num_layers, config.num_heads, config.mem_len, config.dropout_rate, config.num_seeds, config.use_layernorm, config.pre_layernorm, config.use_keras_mha)
 
-        
         model(train_dataset[0][0][:1])
         
         if model_path is not None:

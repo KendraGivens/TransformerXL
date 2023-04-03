@@ -26,6 +26,7 @@ from Scripts.StrXL import *
 
 def define_arguments(cli):
     cli.use_strategy()
+    cli.use_wandb()
 
     cli.artifact("--dataset", type=str, required=True)
     cli.artifact("--encoder", type=str, required=True)
@@ -33,7 +34,7 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
-    cli.argument("--block_size", type=int, default = 250)
+    cli.argument("--block_size", type=int, default = 500)
     cli.argument("--max_set_len", type=int, default = 1000)
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
@@ -53,7 +54,7 @@ def define_arguments(cli):
     
     cli.argument("--save-to", type=str, default=None)
     
-    cli.use_training(epochs=900, batch_size=20)
+    cli.use_training(epochs=1800, batch_size=20)
 
     
 def load_dataset(config):
@@ -96,14 +97,18 @@ def train(config, model_path):
         
         model = XlModel(config.mem_switched, max_files, encoder, config.block_size, config.max_set_len, config.num_induce, config.embed_dim, config.num_layers, config.num_heads, config.mem_len, config.dropout_rate, config.num_seeds, config.use_layernorm, config.pre_layernorm, config.use_keras_mha)
       
+        model(train_dataset[0][0][:1])
+        
         if model_path is not None:
-            model = model.load_weights(model_path + ".h5")
+            model.load_weights(model_path)
  
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3),
                         metrics=keras.metrics.SparseCategoricalAccuracy())
 
-              
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=config.initial_epoch, verbose=1, callbacks=[wandb.keras.WandbCallback(save_model=False)])
+        callback = wandb.keras.WandbCallback(save_model=False)
+        callback.save_model_as_artifact = False
+        
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[callback])
 
 
         if config.save_to != None:
@@ -117,9 +122,7 @@ def main(argv):
     model_path = None
     if tfu.scripting.is_resumed():
         print("Restoring previous model...")
-        model_path = tfu.scripting.restore_dir(config.save_to)
-
-    print(model_path)
+        model_path = tfu.scripting.restore(config.save_to + ".h5").name
 
     print(tfu.scripting.initial_epoch(config))
     if tfu.scripting.initial_epoch(config) < config.epochs:

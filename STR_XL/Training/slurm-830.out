@@ -1,0 +1,4 @@
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 111
+    tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch==tfu.scripting.initial_epoch(config), verbose=1, callbacks=[callback])
+                                                                                                                                                                                                                      ^
+SyntaxError: positional argument follows keyword argument

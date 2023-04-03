@@ -1,0 +1,1 @@
+FATAL:   could not open image /home/jphillips/images/csci4850-2022-Fall.sif: failed to retrieve path for /home/jphillips/images/csci4850-2022-Fall.sif: lstat /home/jphillips/images/csci4850-2022-Fall.sif: no such file or directory
