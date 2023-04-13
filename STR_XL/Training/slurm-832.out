@@ -1,36 +1,0 @@
-2023-04-02 19:59:43.207899: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-wandb: WARNING Tried to auto resume run with id 36kufc1f but id 21xh54co is set.
-wandb: Tracking run with wandb version 0.14.0
-wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230402_195949-21xh54co
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Resuming run 2 250
-wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL
-wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL/runs/21xh54co
-Restoring previous model...
-Traceback (most recent call last):
-  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 134, in <module>
-    sys.exit(tfu.scripting.boot(main, sys.argv))
-  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 106, in boot
-    return job(*args, **kwargs) or 0
-  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 125, in main
-    model_path = tfu.scripting.restore(config.save_to + ".h5").name
-  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 206, in restore
-    return wandb.restore(name, run_path, replace, root)
-  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 3640, in restore
-    raise ValueError(f"File {name} not found in {run_path or root}.")
-ValueError: File StrXL_1.h5 not found in kendragivens/StrXL/21xh54co.
-wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
-wandb: - 0.000 MB of 0.000 MB uploaded (0.000 MB deduped)wandb: \ 0.000 MB of 0.003 MB uploaded (0.000 MB deduped)wandb: | 0.003 MB of 0.003 MB uploaded (0.000 MB deduped)wandb: 
-wandb: Run summary:
-wandb:                      best_epoch 981
-wandb:                   best_val_loss 2.51992
-wandb:                           epoch 999
-wandb:                            loss 2.59826
-wandb:     sparse_categorical_accuracy 0.2375
-wandb:                        val_loss 2.65614
-wandb: val_sparse_categorical_accuracy 0.2
-wandb: 
-wandb: 🚀 View run 2 250 at: https://wandb.ai/kendragivens/StrXL/runs/21xh54co
-wandb: Synced 3 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
-wandb: Find logs at: ./wandb/run-20230402_195949-21xh54co/logs

@@ -1,4 +1,0 @@
-  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Training.py", line 119
-    config = tfu.scripting.init(define_arguments)
-                                                 ^
-IndentationError: unindent does not match any outer indentation level

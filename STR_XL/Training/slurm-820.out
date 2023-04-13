@@ -1,26 +1,0 @@
-2023-04-02 19:43:14.935189: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-wandb: Tracking run with wandb version 0.14.0
-wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230402_194320-36kufc1f
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Resuming run 1 250
-wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL
-wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL/runs/36kufc1f
-Namespace(gpus=[0], dataset_path=None, dataset_artifact='sirdavidludwig/nachusa-dna/nachusa-dna:latest', encoder_path=None, encoder_artifact='sirdavidludwig/dnabert-pretrain/dnabert-pretrain-64dim:latest', seed=1, mem_switched=False, max_files=205, block_size=250, max_set_len=1000, num_induce=64, embed_dim=128, num_layers=8, num_heads=8, mem_len=250, dropout_rate=0.01, num_seeds=1, use_layernorm=True, pre_layernorm=True, use_keras_mha=True, set_len=1000, batches_per_epoch=20, validation_batch_size=5, save_to='StrXL_1', batch_size=20, sub_batch_size=0, data_workers=1, run_eagerly=False, use_dynamic_memory=False, wandb_project='StrXL', wandb_name=None, wandb_group=None, wandb_mode='online', resume='36kufc1f', initial_epoch=0, epochs=5)
-Restoring previous model...
-/home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230402_194320-36kufc1f/files/StrXL_1.h5
-945
-wandb: Waiting for W&B process to finish... (success).
-wandb: - 0.000 MB of 10.547 MB uploaded (0.000 MB deduped)wandb: \ 2.839 MB of 10.547 MB uploaded (0.000 MB deduped)wandb: 
-wandb: Run summary:
-wandb:                      best_epoch 910
-wandb:                   best_val_loss 1.5892
-wandb:                           epoch 944
-wandb:                            loss 1.77586
-wandb:     sparse_categorical_accuracy 0.4725
-wandb:                        val_loss 2.34467
-wandb: val_sparse_categorical_accuracy 0.32
-wandb: 
-wandb: 🚀 View run 1 250 at: https://wandb.ai/kendragivens/StrXL/runs/36kufc1f
-wandb: Synced 3 W&B file(s), 0 media file(s), 0 artifact file(s) and 1 other file(s)
-wandb: Find logs at: ./wandb/run-20230402_194320-36kufc1f/logs

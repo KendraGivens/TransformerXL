@@ -34,13 +34,13 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
-    cli.argument("--block_size", type=int, default = 500)
+    cli.argument("--block_size", type=int, default = 250)
     cli.argument("--max_set_len", type=int, default = 1000)
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
-    cli.argument("--mem_len", type=int, default = 250)
+    cli.argument("--mem_len", type=int, default = 500)
     cli.argument("--dropout_rate", type=float, default = 0.01)
     cli.argument("--num_seeds", type=int, default = 1)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
@@ -54,7 +54,7 @@ def define_arguments(cli):
     
     cli.argument("--save-to", type=str, default=None)
     
-    cli.use_training(epochs=1800, batch_size=20)
+    cli.use_training(epochs=3000, batch_size=20)
 
     
 def load_dataset(config):
@@ -105,15 +105,17 @@ def train(config, model_path):
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3),
                         metrics=keras.metrics.SparseCategoricalAccuracy())
 
-        callback = wandb.keras.WandbCallback(save_model=False)
-        callback.save_model_as_artifact = False
+        keras_callback = tf.keras.callbacks.ModelCheckpoint(filepath=config.save_to.format(**config.__dict__) + ".h5", save_weights_only=True, save_freq="epoch")
+
+        wandb_callback = wandb.keras.WandbCallback(save_model=False)
+        wandb_callback.save_model_as_artifact = False
         
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[callback])
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[wandb_callback, keras_callback])
 
 
-        if config.save_to != None:
-            model.save_weights(tfu.scripting.path_to(config.save_to) + ".h5")
-    
+#        if config.save_to != None:
+#            model.save_weights(tfu.scripting.path_to(config.save_to.format(**config.__dict__)) + ".h5")
+ 
 def main(argv):
     dotenv.load_dotenv()
     config = tfu.scripting.init(define_arguments)
@@ -122,7 +124,7 @@ def main(argv):
     model_path = None
     if tfu.scripting.is_resumed():
         print("Restoring previous model...")
-        model_path = tfu.scripting.restore(config.save_to + ".h5").name
+        model_path = tfu.scripting.restore(config.save_to.format(**config.__dict__) + ".h5").name
 
     print(tfu.scripting.initial_epoch(config))
     if tfu.scripting.initial_epoch(config) < config.epochs:
