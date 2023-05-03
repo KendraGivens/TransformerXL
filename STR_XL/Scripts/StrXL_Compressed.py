@@ -57,29 +57,22 @@ class Create_Embeddings(keras.layers.Layer):
     
     def call(self, data):
         return  self.modify_data_for_input(data)
-    
-class Compress_Memory(keras.layers.Layer):
-    def __init__(self, num_seeds, embed_dim, num_heads, use_layernorm, pre_layernorm, use_keras_mha):
-        super(Compress_Memory, self).__init__()
-        
-        self.num_seeds = num_seeds
-        self.embed_dim = embed_dim
-        self.num_heads = num_heads
-        self.use_layernorm = use_layernorm
-        self.pre_layernorm = pre_layernorm
-        self.use_keras_mha = use_keras_mha
-        
-        self.compresser = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds,embed_dim=self.embed_dim,num_heads=self.num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha, is_final_block=True)
-        
-    def call(self, current_state, previous_state):
+
+def Cache_Memory(current_state, previous_state, memory_length):
+    if memory_length is None or memory_length == 0:
+        return None, None
+    else:
         if previous_state is None:
-            new_mem = self.compresser(current_state)
+            new_mem = current_state[:, -memory_length:, :]
+            excess = current_state[:, :-memory_length, :]
         else:
-            new_mem = self.compresser(tf.concat([previous_state, current_state], 1))
+            concatanted =  tf.concat([previous_state, current_state], 1)
+            new_mem = concatanted[:, -memory_length:, :]
+            excess = concatanted[:,:-memory_length,:]
+            
+    return tf.stop_gradient(new_mem), excess
 
-        return tf.stop_gradient(new_mem)
-
-class Attention(keras.layers.Layer):
+class Attention(keras.Model):
     def __init__(self, num_induce, embed_dim, num_heads, use_layernorm, pre_layernorm, use_keras_mha):
         super(Attention, self).__init__()
         
@@ -94,14 +87,17 @@ class Attention(keras.layers.Layer):
             self.attention = (Set_Transformer.SetAttentionBlock(embed_dim=self.embed_dim, num_heads=self.num_heads, use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm,use_keras_mha=self.use_keras_mha))
         else:
             self.attention = Set_Transformer.InducedSetAttentionBlock(embed_dim=self.embed_dim, num_heads=self.num_heads, num_induce=self.num_induce, use_layernorm=self.use_layernorm, pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha)
-
-    def call(self, data, mems=None):
+    
+    
+    def call(self, data, mems):
+                
             attention = self.attention([data, mems])
                 
             return attention
 
 class TransformerXLBlock(tf.keras.layers.Layer):
     def __init__(self,
+                 num_compressed_seeds,
                  num_induce, 
                  embed_dim,
                  num_heads,
@@ -111,6 +107,7 @@ class TransformerXLBlock(tf.keras.layers.Layer):
 
         super(TransformerXLBlock, self).__init__()
         
+        self.num_compressed_seeds = num_compressed_seeds
         self.num_induce = num_induce
         self.embed_dim = embed_dim
         self.num_heads = num_heads
@@ -122,24 +119,30 @@ class TransformerXLBlock(tf.keras.layers.Layer):
         
         self.attention_layer = self.attention(self.num_induce, self.embed_dim, self.num_heads, self.use_layernorm, self.pre_layernorm, self.use_keras_mha)
 
+        self.compress = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_compressed_seeds,embed_dim=self.embed_dim,num_heads=self.num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha, is_final_block=True)
+
    
     def call(self,
              content_stream,
-             state=None):
+             state=None,
+             compressed=None):
         
-        attention_output = self.attention_layer(content_stream, state)
-
+        memories = tf.concat((state, compressed), axis=1)
+        
+        attention_output = self.attention_layer(content_stream, memories)
+        
         return attention_output
 
 class TransformerXL(tf.keras.layers.Layer):
     def __init__(self,
                  mem_switched, 
-                 num_seeds,
+                 num_compressed_seeds,
                  num_layers,
                  num_induce,
                  embed_dim,
                  num_heads,
                  dropout_rate,
+                 mem_len=None,
                  use_layernorm=True,
                  pre_layernorm=True, 
                  use_keras_mha=True):
@@ -147,30 +150,23 @@ class TransformerXL(tf.keras.layers.Layer):
         super(TransformerXL, self).__init__()
 
         self.mem_switched = mem_switched
-        self.num_seeds = num_seeds
+        self.num_compressed_seeds = num_compressed_seeds
         self.num_layers = num_layers
         self.num_induce = num_induce
         self.embed_dim = embed_dim
         self.num_heads = num_heads
         self.dropout_rate = dropout_rate
+        self.mem_len = mem_len
         self.use_layernorm = use_layernorm
         self.pre_layernorm = pre_layernorm
         self.use_keras_mha = use_keras_mha
-
-        self.compresser = Compress_Memory
-        
-        self.compress_mems = self.compresser(self.num_seeds,
-                                        self.embed_dim,
-                                        self.num_heads,
-                                        self.use_layernorm,
-                                        self.pre_layernorm, 
-                                        self.use_keras_mha)
 
         self.transformer_xl_layers = []
         
         for i in range(self.num_layers):
             self.transformer_xl_layers.append(
-                    TransformerXLBlock(self.num_induce,
+                    TransformerXLBlock(self.num_compressed_seeds,
+                                        self.num_induce,
                                         self.embed_dim,
                                         self.num_heads,
                                         self.use_layernorm,
@@ -181,36 +177,57 @@ class TransformerXL(tf.keras.layers.Layer):
 
     def call(self,
              content_stream,
-             state=None):
+             state=None,
+             compressed=None):
         
         new_mems = []
+        new_compressed = []
 
         if state is None:
             state = [None] * self.num_layers
-
-        for i in range(self.num_layers):
+            
+        if new_compressed is None:
+            new_compressed = [None] * self.num_layers
+            
+        for i, transformer_xl_layer in enumerate(self.transformer_xl_layers):
             if self.mem_switched == False:
-                new_mems.append(self.compress_mems(content_stream, state[i]))
+                mems_append, mems_excess = Cache_Memory(content_stream, state[i], self.num_seeds)
+                new_mems.append(mems_append)
+                
+                #Perform attention between current segment and uncompressed trimmed memory
+                uncompressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(mems_excess))
+                
+                compressed_excess = transformer_xl_layer.compress(mems_excess)
+                
+                compressed_append, _ = Cache_Memory(compressed_excess, compressed[i], self.num_seeds)
+                new_compressed.append(compressed_append)
             
-            transformer_xl_layer = self.transformer_xl_layers[i]
-            
+                #Perform attention between current segment and compressed trimmed memory
+                compressed_attention = transformer_xl_layer.attention_layer( tf.stop_gradient(content_stream), tf.stop_gradient(compressed_excess))
+                
+                loss = tf.linalg.norm(uncompressed_attention-compressed_attention)
             transformer_xl_output = transformer_xl_layer(content_stream=content_stream,
-                                                        state=state[i])
+                                                        state=state[i], compressed=compressed[i])
             
             content_stream = self.output_dropout(transformer_xl_output)
             
             if self.mem_switched == True:
-                new_mems.append(self.compress_mems(content_stream, state[i]))
+                mems_append, mems_excess = Cache_Memory(content_stream, state[i], self.num_seeds)
+                new_mems.append(mems_append)
+                
+                compressed_append, compressed_excess = (Cache_Memory(transformer_xl_layer.compress(mems_excess), compressed[i], self.num_seeds))
+                new_compressed.append(compressed_append)
 
         output_stream = content_stream
-        return output_stream, new_mems
+        return output_stream, new_mems, new_compressed, loss
 
 class XlModel(keras.Model):
-    def __init__(self, mem_switched, num_seeds_mems, max_files, encoder, block_size, max_set_len, num_induce, embed_dim, num_layers, num_heads, dropout_rate, num_seeds_output, use_layernorm, pre_layernorm, use_keras_mha):
+    def __init__(self, mem_switched, num_compressed_seeds, compressed_len, max_files, encoder, block_size, max_set_len, num_induce, embed_dim, num_layers, num_heads, mem_len, dropout_rate, num_seeds, use_layernorm, pre_layernorm, use_keras_mha):
         super(XlModel, self).__init__()
         
         self.mem_switched = mem_switched
-        self.num_seeds_mems = num_seeds_mems
+        self.num_compressed_seeds = num_compressed_seeds
+        self.compressed_len = compressed_len
         self.max_files = max_files
         self.encoder = encoder
         self.block_size = block_size
@@ -219,8 +236,9 @@ class XlModel(keras.Model):
         self.embed_dim = embed_dim
         self.num_layers = num_layers
         self.num_heads = num_heads
+        self.mem_len = mem_len
         self.dropout_rate = dropout_rate
-        self.num_seeds_output = num_seeds_output
+        self.num_seeds = num_seeds
         self.use_layernorm = use_layernorm
         self.pre_layernorm = pre_layernorm
         self.use_keras_mha = use_keras_mha
@@ -230,41 +248,83 @@ class XlModel(keras.Model):
         self.linear_layer = keras.layers.Dense(self.embed_dim)
         
         self.transformer_xl = TransformerXL(self.mem_switched,
-                                            self.num_seeds_mems,
+                                            self.num_compressed_seeds,
                                             self.num_layers,
                                              self.num_induce,
                                              self.embed_dim,
                                              self.num_heads,
                                              self.dropout_rate,
+                                             self.mem_len,
                                              self.use_layernorm,
                                              self.pre_layernorm,
                                              self.use_keras_mha)
         
 
-        self.pooling_layer = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds_output,embed_dim=self.embed_dim,num_heads=self.num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha, is_final_block=True)
+        self.pooling_layer = Set_Transformer.PoolingByMultiHeadAttention(num_seeds=self.num_seeds,embed_dim=self.embed_dim,num_heads=self.num_heads,use_layernorm=self.use_layernorm,pre_layernorm=self.pre_layernorm, use_keras_mha=self.use_keras_mha, is_final_block=True)
     
         self.reshape_layer = keras.layers.Reshape((self.embed_dim,))
    
         self.output_layer = keras.layers.Dense(self.max_files, activation=keras.activations.softmax)
         
     
-    def call(self, x, training=None):        
- 
-        mems = tf.zeros((self.num_layers, tf.shape(x)[0], self.num_seeds_mems, self.embed_dim))
-    
+     def train_step(self, data):
+        x, y = data
+
+        with tf.GradientTape() as tape:
+            y_pred, loss_compressed = self(x, return_loss=True, training=True) 
+            loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
+
+            trainable_vars = self.trainable_variables
+            gradients = tape.gradient(loss+loss_compressed, trainable_vars)
+
+            self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+            self.compiled_metrics.update_state(y, y_pred)
+
+            return {m.name: m.result() for m in self.metrics}
+
+    def call(self, x, return_loss=False, training=None):        
+        mems = tf.zeros((self.num_layers, tf.shape(x)[0], self.mem_len, self.embed_dim))
+        compressed = tf.zeros((self.num_layers, tf.shape(x)[0], self.compressed_len, self.embed_dim))
+
         embeddings = self.embedding_layer(x)
 
         linear_transform = self.linear_layer(embeddings)
 
+        losses = 0
+        
         for i in range(0, self.max_set_len, self.block_size):
             block = linear_transform[:,i:i+self.block_size]
             
-            output, mems = self.transformer_xl(content_stream=block, state=mems)
+            output, mems, compressed, loss = self.transformer_xl(content_stream=block, state=mems, compressed=compressed)
+            losses = losses + loss
             
         pooling = self.pooling_layer(output)
 
         reshape = self.reshape_layer(pooling)
 
         output = self.output_layer(reshape)          
+        
+        if return_loss:
+            return output, losses
+        
+        return output
+        linear_transform = self.linear_layer(embeddings)
+
+        losses = 0
+        
+        for i in range(0, self.max_set_len, self.block_size):
+            block = linear_transform[:,i:i+self.block_size]
+            
+            output, mems, compressed, loss = self.transformer_xl(content_stream=block, state=mems, compressed=compressed)
+            losses = losses + loss
+            
+        pooling = self.pooling_layer(output)
+
+        reshape = self.reshape_layer(pooling)
+
+        output = self.output_layer(reshape)          
+        
+        if return_loss:
+            return output, losses
         
         return output

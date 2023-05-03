@@ -105,16 +105,14 @@ def train(config, model_path):
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3),
                         metrics=keras.metrics.SparseCategoricalAccuracy())
 
-        keras_callback = tf.keras.callbacks.ModelCheckpoint(filepath=config.save_to.format(**config.__dict__) + ".h5", save_weights_only=True, save_freq="epoch")
-
         wandb_callback = wandb.keras.WandbCallback(save_model=False)
         wandb_callback.save_model_as_artifact = False
         
-        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[wandb_callback, keras_callback])
 
+        tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[wandb_callback])
 
-#        if config.save_to != None:
-#            model.save_weights(tfu.scripting.path_to(config.save_to.format(**config.__dict__)) + ".h5")
+        if config.save_to != None:
+            model.save_weights(tfu.scripting.path_to(config.save_to.format(**config.__dict__)) + ".h5")
  
 def main(argv):
     dotenv.load_dotenv()
@@ -125,7 +123,7 @@ def main(argv):
     if tfu.scripting.is_resumed():
         print("Restoring previous model...")
         model_path = tfu.scripting.restore(config.save_to.format(**config.__dict__) + ".h5").name
-
+       # model_path = config.save_to.format(**config.__dict__) + ".h5"
     print(tfu.scripting.initial_epoch(config))
     if tfu.scripting.initial_epoch(config) < config.epochs:
         train(config, model_path)

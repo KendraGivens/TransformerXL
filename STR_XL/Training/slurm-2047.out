@@ -1,0 +1,219 @@
+2023-05-01 21:25:49.888176: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-01 21:25:50.244031: I tensorflow/core/util/util.cc:169] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+wandb: wandb version 0.15.0 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230501_212554-fbfb28as
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Resuming run dutiful-microwave-256
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL
+wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL/runs/fbfb28as
+2023-05-01 21:25:56.689201: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-01 21:25:58.819994: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1616] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 9632 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 2080 Ti, pci bus id: 0000:68:00.0, compute capability: 7.5
+wandb: Downloading large artifact nachusa-dna:latest, 4079.09MB. 420 files... 
+wandb: \ 1 of 420 files downloaded...wandb: | 35 of 420 files downloaded...wandb: / 57 of 420 files downloaded...wandb: - 63 of 420 files downloaded...wandb: \ 72 of 420 files downloaded...wandb: | 102 of 420 files downloaded...wandb: / 114 of 420 files downloaded...wandb: - 121 of 420 files downloaded...wandb: \ 133 of 420 files downloaded...wandb: | 153 of 420 files downloaded...wandb: / 167 of 420 files downloaded...wandb: - 177 of 420 files downloaded...wandb: \ 183 of 420 files downloaded...wandb: | 186 of 420 files downloaded...wandb: / 206 of 420 files downloaded...wandb: - 227 of 420 files downloaded...wandb: \ 239 of 420 files downloaded...wandb: | 252 of 420 files downloaded...wandb: / 265 of 420 files downloaded...wandb: - 277 of 420 files downloaded...wandb: \ 295 of 420 files downloaded...wandb: | 315 of 420 files downloaded...wandb: / 346 of 420 files downloaded...wandb: - 366 of 420 files downloaded...wandb: \ 395 of 420 files downloaded...wandb: | 402 of 420 files downloaded...wandb: / 419 of 420 files downloaded...wandb:   420 of 420 files downloaded.  
+Done. 0:0:4.0
+wandb:   5 of 5 files downloaded.  
+2023-05-01 21:26:13.687893: W tensorflow/core/grappler/optimizers/data/auto_shard.cc:776] AUTO sharding policy will apply DATA sharding policy as it failed to apply FILE sharding policy because of the following reason: Did not find a shardable source, walked to a node which is not a dataset: name: "FlatMapDataset/_2"
+op: "FlatMapDataset"
+input: "TensorDataset/_1"
+attr {
+  key: "Targuments"
+  value {
+    list {
+    }
+  }
+}
+attr {
+  key: "_cardinality"
+  value {
+    i: -2
+  }
+}
+attr {
+  key: "f"
+  value {
+    func {
+      name: "__inference_Dataset_flat_map_flat_map_fn_58832"
+    }
+  }
+}
+attr {
+  key: "metadata"
+  value {
+    s: "\n\020FlatMapDataset:1"
+  }
+}
+attr {
+  key: "output_shapes"
+  value {
+    list {
+      shape {
+        dim {
+          size: -1
+        }
+        dim {
+          size: -1
+        }
+        dim {
+          size: -1
+        }
+      }
+      shape {
+        dim {
+          size: -1
+        }
+      }
+    }
+  }
+}
+attr {
+  key: "output_types"
+  value {
+    list {
+      type: DT_FLOAT
+      type: DT_INT32
+    }
+  }
+}
+experimental_type {
+  type_id: TFT_PRODUCT
+  args {
+    type_id: TFT_DATASET
+    args {
+      type_id: TFT_PRODUCT
+      args {
+        type_id: TFT_TENSOR
+        args {
+          type_id: TFT_FLOAT
+        }
+      }
+      args {
+        type_id: TFT_TENSOR
+        args {
+          type_id: TFT_INT32
+        }
+      }
+    }
+  }
+}
+. Consider either turning off auto-sharding or switching the auto_shard_policy to DATA to shard this dataset. You can do this by creating a new `tf.data.Options()` object then setting `options.experimental_distribute.auto_shard_policy = AutoShardPolicy.DATA` before applying the options object to the dataset via `dataset.with_options(options)`.
+Restoring previous model...
+2
+Using GPU Strategy. Selected GPUs: [0]
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley056-NegCtrl_S195_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley049-SB-100420_S188_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes44-PCRblank3_S45_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Epoch 3/3
+ 1/20 [>.............................] - ETA: 6:09 - loss: 4.8125 - sparse_categorical_accuracy: 0.0500 2/20 [==>...........................] - ETA: 1:48 - loss: 4.7923 - sparse_categorical_accuracy: 0.0250 3/20 [===>..........................] - ETA: 1:42 - loss: 4.7294 - sparse_categorical_accuracy: 0.0500 4/20 [=====>........................] - ETA: 1:36 - loss: 4.8282 - sparse_categorical_accuracy: 0.0375 5/20 [======>.......................] - ETA: 1:30 - loss: 4.8336 - sparse_categorical_accuracy: 0.0400 6/20 [========>.....................] - ETA: 1:24 - loss: 4.8449 - sparse_categorical_accuracy: 0.0333 7/20 [=========>....................] - ETA: 1:18 - loss: 4.9091 - sparse_categorical_accuracy: 0.0286 8/20 [===========>..................] - ETA: 1:12 - loss: 4.9238 - sparse_categorical_accuracy: 0.0250 9/20 [============>.................] - ETA: 1:06 - loss: 4.9218 - sparse_categorical_accuracy: 0.022210/20 [==============>...............] - ETA: 1:00 - loss: 4.9428 - sparse_categorical_accuracy: 0.020011/20 [===============>..............] - ETA: 54s - loss: 4.9503 - sparse_categorical_accuracy: 0.0227 12/20 [=================>............] - ETA: 48s - loss: 4.9556 - sparse_categorical_accuracy: 0.025013/20 [==================>...........] - ETA: 42s - loss: 4.9725 - sparse_categorical_accuracy: 0.023114/20 [====================>.........] - ETA: 36s - loss: 4.9926 - sparse_categorical_accuracy: 0.025015/20 [=====================>........] - ETA: 30s - loss: 4.9942 - sparse_categorical_accuracy: 0.023316/20 [=======================>......] - ETA: 24s - loss: 4.9963 - sparse_categorical_accuracy: 0.021917/20 [========================>.....] - ETA: 18s - loss: 5.0155 - sparse_categorical_accuracy: 0.020618/20 [==========================>...] - ETA: 12s - loss: 5.0427 - sparse_categorical_accuracy: 0.019419/20 [===========================>..] - ETA: 6s - loss: 5.0555 - sparse_categorical_accuracy: 0.0184 20/20 [==============================] - ETA: 0s - loss: 5.0650 - sparse_categorical_accuracy: 0.01752023-05-01 21:28:28.231486: W tensorflow/core/grappler/optimizers/data/auto_shard.cc:776] AUTO sharding policy will apply DATA sharding policy as it failed to apply FILE sharding policy because of the following reason: Did not find a shardable source, walked to a node which is not a dataset: name: "FlatMapDataset/_2"
+op: "FlatMapDataset"
+input: "TensorDataset/_1"
+attr {
+  key: "Targuments"
+  value {
+    list {
+    }
+  }
+}
+attr {
+  key: "_cardinality"
+  value {
+    i: -2
+  }
+}
+attr {
+  key: "f"
+  value {
+    func {
+      name: "__inference_Dataset_flat_map_flat_map_fn_87511"
+    }
+  }
+}
+attr {
+  key: "metadata"
+  value {
+    s: "\n\021FlatMapDataset:17"
+  }
+}
+attr {
+  key: "output_shapes"
+  value {
+    list {
+      shape {
+        dim {
+          size: -1
+        }
+        dim {
+          size: -1
+        }
+        dim {
+          size: -1
+        }
+      }
+      shape {
+        dim {
+          size: -1
+        }
+      }
+    }
+  }
+}
+attr {
+  key: "output_types"
+  value {
+    list {
+      type: DT_FLOAT
+      type: DT_INT32
+    }
+  }
+}
+experimental_type {
+  type_id: TFT_PRODUCT
+  args {
+    type_id: TFT_DATASET
+    args {
+      type_id: TFT_PRODUCT
+      args {
+        type_id: TFT_TENSOR
+        args {
+          type_id: TFT_FLOAT
+        }
+      }
+      args {
+        type_id: TFT_TENSOR
+        args {
+          type_id: TFT_INT32
+        }
+      }
+    }
+  }
+}
+. Consider either turning off auto-sharding or switching the auto_shard_policy to DATA to shard this dataset. You can do this by creating a new `tf.data.Options()` object then setting `options.experimental_distribute.auto_shard_policy = AutoShardPolicy.DATA` before applying the options object to the dataset via `dataset.with_options(options)`.
+20/20 [==============================] - 168s 8s/step - loss: 5.0650 - sparse_categorical_accuracy: 0.0175 - val_loss: 5.1576 - val_sparse_categorical_accuracy: 0.0100
+wandb: Waiting for W&B process to finish... (success).
+wandb: 
+wandb: Run history:
+wandb:                           epoch ▁
+wandb:                            loss ▁
+wandb:     sparse_categorical_accuracy ▁
+wandb:                        val_loss ▁
+wandb: val_sparse_categorical_accuracy ▁
+wandb: 
+wandb: Run summary:
+wandb:                      best_epoch 2
+wandb:                   best_val_loss 5.15756
+wandb:                           epoch 2
+wandb:                            loss 5.06502
+wandb:     sparse_categorical_accuracy 0.0175
+wandb:                        val_loss 5.15756
+wandb: val_sparse_categorical_accuracy 0.01
+wandb: 
+wandb: 🚀 View run dutiful-microwave-256 at: https://wandb.ai/kendragivens/StrXL/runs/fbfb28as
+wandb: Synced 3 W&B file(s), 1 media file(s), 0 artifact file(s) and 1 other file(s)
+wandb: Find logs at: ./wandb/run-20230501_212554-fbfb28as/logs
