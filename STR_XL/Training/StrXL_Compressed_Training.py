@@ -34,15 +34,16 @@ def define_arguments(cli):
     cli.argument("--seed", type=int, default = None)
     
     cli.argument("--mem_switched", type=tfu.utils.str_to_bool, default=False)
-    cli.argument("--num_seeds_compressed", type=int, default=250)
-    cli.argument("--compressed_len", type=int, default=1)
+    cli.argument("--num_compressed_seeds", type=int, default=50)
+    cli.argument("--compressed_len", type=int, default=250)
     cli.argument("--block_size", type=int, default = 250)
     cli.argument("--max_set_len", type=int, default = 1000)
     cli.argument("--num_induce", type=int, default = 0)
     cli.argument("--embed_dim", type=int, default = 64)
     cli.argument("--num_layers", type=int, default = 8)
     cli.argument("--num_heads", type=int, default = 8)
-    cli.argument("--mem_len", type=int, default = 500)
+    cli.argument("--mem_len", type=int, default = 250)
+    cli.argument("--compressed_mem_len", type=int, default = 250)
     cli.argument("--dropout_rate", type=float, default = 0.01)
     cli.argument("--num_seeds", type=int, default = 1)
     cli.argument("--use_layernorm", type=tfu.utils.str_to_bool, default = True)
@@ -56,7 +57,7 @@ def define_arguments(cli):
     
     cli.argument("--save-to", type=str, default=None)
     
-    cli.use_training(epochs=3000, batch_size=20)
+    cli.use_training(epochs=750, batch_size=20)
 
     
 def load_dataset(config):
@@ -115,8 +116,9 @@ def train(config, model_path):
 
     if config.save_to != None:
         model.save_weights(tfu.scripting.path_to(config.save_to.format(**config.__dict__)) + ".h5")
- 
- def main(argv):
+
+
+def main(argv):
     dotenv.load_dotenv()
     config = tfu.scripting.init(define_arguments)
     tfu.scripting.random_seed(config.seed)
@@ -125,11 +127,9 @@ def train(config, model_path):
     if tfu.scripting.is_resumed():
         print("Restoring previous model...")
         model_path = tfu.scripting.restore(config.save_to.format(**config.__dict__) + ".h5").name
-    print(tfu.scripting.initial_epoch(config))
+        print(tfu.scripting.initial_epoch(config))
     if tfu.scripting.initial_epoch(config) < config.epochs:
         train(config, model_path)
-    
-    
     
 if __name__ == "__main__":
     sys.exit(tfu.scripting.boot(main, sys.argv))

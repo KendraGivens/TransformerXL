@@ -10,9 +10,9 @@ singularity exec --nv --bind /home/klg6z/work:/home/jovyan /home/jphillips/image
 	--mem_len 250 \
 	--num_induce 0 \
 	--gpus 0 \
-	--seed 2  \
-	--epochs 2200 \
-	--resume mf0utx5m \
+	--seed 4  \
+	--epochs 3000 \
+	--resume fbfb28as \
 
 
 
