@@ -421,58 +421,6 @@ class PoolingByMultiHeadAttention(keras.layers.Layer):
             "use_spectral_norm": self.mab.use_spectral_norm
         })
         return config
-@CustomLayer
-class CompressedPoolingByMultiHeadAttention(keras.layers.Layer):
-    def __init__(
-        self,
-        num_seeds,
-        embed_dim,
-        num_heads,
-        ff_dim=None,
-        ff_activation="relu",
-        use_layernorm=True,
-        pre_layernorm=False,
-        is_final_block=False,
-        use_keras_mha=True,
-        use_spectral_norm=False,
-        **kwargs
-    ):
-        super().__init__(**kwargs)
-        self.num_seeds = num_seeds
-        self.embed_dim = embed_dim
-
-        self.mab = MultiHeadAttentionBlock(
-            embed_dim, num_heads, ff_dim, ff_activation, use_layernorm,
-            pre_layernorm, is_final_block, use_keras_mha, use_spectral_norm)
-
-        self.seed_vectors = self.add_weight(
-            shape=(1, self.num_seeds, self.embed_dim),
-            initializer="random_normal",
-            trainable=True,
-            name="CSeeds")
-
-
-    def call(self, z, training=None):        
-        batch_size = tf.shape(z)[0]
-        seeds = tf.tile(self.seed_vectors, (batch_size, 1, 1))
-        return self.mab((seeds, z), training=training)
-
-
-    def get_config(self):
-        config = super().get_config()
-        config.update({
-            "num_seeds": self.num_seeds,
-            "embed_dim": self.embed_dim,
-            "num_heads": self.mab.num_heads,
-            "ff_dim": self.mab.ff_dim,
-            "ff_activation": self.mab.ff_activation,
-            "use_layernorm": self.mab.use_layernorm,
-            "pre_layernorm": self.mab.pre_layernorm,
-            "is_final_block": self.mab.is_final_block,
-            "use_keras_mha": self.mab.use_keras_mha,
-            "use_spectral_norm": self.mab.use_spectral_norm
-        })
-        return config
 
 @CustomLayer
 class InducedSetEncoder(PoolingByMultiHeadAttention):

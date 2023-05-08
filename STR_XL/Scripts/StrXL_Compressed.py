@@ -70,7 +70,7 @@ def Cache_Memory(current_state, previous_state, memory_length):
             new_mem = concatanted[:, -memory_length:, :]
             excess = concatanted[:,:-memory_length,:]
             
-    return tf.stop_gradient(new_mem), excess
+    return new_mem, excess
 
 class Attention(keras.Model):
     def __init__(self, num_induce, embed_dim, num_heads, use_layernorm, pre_layernorm, use_keras_mha, **kwargs):
@@ -194,7 +194,7 @@ class TransformerXL(tf.keras.layers.Layer):
         for i, transformer_xl_layer in enumerate(self.transformer_xl_layers):
             if self.mem_switched == False:
                 mems_append, mems_excess = Cache_Memory(content_stream, state[i], self.mem_len)
-                new_mems.append(mems_append)
+                new_mems.append(tf.stop_gradient(mems_append))
                 
                 #Perform attention between current segment and uncompressed trimmed memory
                 uncompressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(mems_excess))
@@ -205,7 +205,7 @@ class TransformerXL(tf.keras.layers.Layer):
                 new_compressed.append(compressed_append)
             
                 #Perform attention between current segment and compressed trimmed memory
-                compressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(compressed_excess))
+                compressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), compressed_excess)
                 
                 loss = tf.linalg.norm(uncompressed_attention-compressed_attention)
             transformer_xl_output = transformer_xl_layer(content_stream=content_stream,
@@ -214,11 +214,21 @@ class TransformerXL(tf.keras.layers.Layer):
             content_stream = self.output_dropout(transformer_xl_output)
             
             if self.mem_switched == True:
-                mems_append, mems_excess = Cache_Memory(content_stream, state[i], self.num_seeds)
-                new_mems.append(mems_append)
+                mems_append, mems_excess = Cache_Memory(content_stream, state[i], self.mem_len)
+                new_mems.append(tf.stop_gradient(mems_append))
                 
-                compressed_append, compressed_excess = (Cache_Memory(transformer_xl_layer.compress(mems_excess), compressed[i], self.num_seeds))
+                #Perform attention between current segment and uncompressed trimmed memory
+                uncompressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(mems_excess))
+                
+                compressed_excess = transformer_xl_layer.compress(mems_excess)
+                
+                compressed_append, _ = Cache_Memory(compressed_excess, compressed[i], self.mem_len)
                 new_compressed.append(compressed_append)
+            
+                #Perform attention between current segment and compressed trimmed memory
+                compressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), compressed_excess)
+                
+                loss = tf.linalg.norm(uncompressed_attention-compressed_attention)
 
         output_stream = content_stream
         return output_stream, new_mems, new_compressed, loss
