@@ -21,6 +21,7 @@ from lmdbm import Lmdb
 from common.data import DnaSequenceGenerator, DnaLabelType, DnaSampleGenerator, find_dbs
 import wandb
 import dotenv
+import pickle
 
 from Scripts.StrXL_Compressed import *
 
@@ -57,7 +58,7 @@ def define_arguments(cli):
     
     cli.argument("--save-to", type=str, default=None)
     
-    cli.use_training(epochs=750, batch_size=20)
+    cli.use_training(epochs=700, batch_size=20)
 
     
 def load_dataset(config):
@@ -103,7 +104,8 @@ def train(config, model_path):
         model(train_dataset[0][0][:1])
         
         if model_path is not None:
-            model.load_weights(model_path)
+            with open(model_path, "rb") as f:
+                model.set_weights(pickle.load(f))
  
         model.compile(loss = keras.losses.SparseCategoricalCrossentropy(from_logits=False), optimizer = keras.optimizers.Adam(1e-3),
                         metrics=keras.metrics.SparseCategoricalAccuracy())
@@ -115,19 +117,24 @@ def train(config, model_path):
         tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[wandb_callback])
 
     if config.save_to != None:
-        model.save_weights(tfu.scripting.path_to(config.save_to.format(**config.__dict__)) + ".h5")
-
+        filename = tfu.scripting.path_to(config.save_to.format(**config.__dict__)) + ".h5"
+        
+        with open(filename, "wb") as f:
+            pickle.dump(model.get_weights(), f)
 
 def main(argv):
     dotenv.load_dotenv()
     config = tfu.scripting.init(define_arguments)
     tfu.scripting.random_seed(config.seed)
 
+    print(argv, config)
+    
     model_path = None
     if tfu.scripting.is_resumed():
         print("Restoring previous model...")
         model_path = tfu.scripting.restore(config.save_to.format(**config.__dict__) + ".h5").name
         print(tfu.scripting.initial_epoch(config))
+        
     if tfu.scripting.initial_epoch(config) < config.epochs:
         train(config, model_path)
     

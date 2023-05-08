@@ -6,11 +6,12 @@ singularity exec --nv --bind /home/klg6z/work:/home/jovyan /home/jphillips/image
     --dataset-artifact sirdavidludwig/nachusa-dna/nachusa-dna:latest \
     --encoder-artifact sirdavidludwig/dnabert-pretrain/dnabert-pretrain-64dim:latest \
     --wandb-project "StrXL_Compressed" \
-    --save-to "StrXL_{seed}_{mem_len}_{num_compressed_seeds}" \
+    --save-to "StrXL_Compressed_{seed}_{mem_len}_{num_compressed_seeds}" \
     --mem_len 250 \
+    --compressed_len 250 \
     --num_compressed_seeds 50 \
     --num_induce 0 \
     --gpus 0 \
     --seed 3 \
-    --epochs 1 \
-    #--resume fbfb28as \
+    --epochs 750 \
+    #--resume bpt2uqye \
