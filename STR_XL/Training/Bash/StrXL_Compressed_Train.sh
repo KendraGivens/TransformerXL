@@ -12,6 +12,6 @@ singularity exec --nv --bind /home/klg6z/work:/home/jovyan /home/jphillips/image
     --num_compressed_seeds 50 \
     --num_induce 0 \
     --gpus 0 \
-    --seed 3 \
+    --seed 1 \
     --epochs 750 \
     #--resume bpt2uqye \

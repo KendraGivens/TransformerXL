@@ -1,237 +1,0 @@
-2023-05-06 20:55:04.682242: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-05-06 20:55:05.019841: I tensorflow/core/util/util.cc:169] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
-wandb: wandb version 0.15.2 is available!  To upgrade, please run:
-wandb:  $ pip install wandb --upgrade
-wandb: Tracking run with wandb version 0.14.0
-wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230506_205509-2ny2cooj
-wandb: Run `wandb offline` to turn off syncing.
-wandb: Syncing run fiery-totem-51
-wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL_Compressed
-wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL_Compressed/runs/2ny2cooj
-2023-05-06 20:55:19.515893: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
-To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
-2023-05-06 20:55:21.661180: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1616] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 9632 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 2080 Ti, pci bus id: 0000:68:00.0, compute capability: 7.5
-wandb: Downloading large artifact nachusa-dna:latest, 4079.09MB. 420 files... 
-wandb: \ 1 of 420 files downloaded...wandb: | 60 of 420 files downloaded...wandb: / 64 of 420 files downloaded...wandb: - 65 of 420 files downloaded...wandb: \ 93 of 420 files downloaded...wandb: | 113 of 420 files downloaded...wandb: / 119 of 420 files downloaded...wandb: - 135 of 420 files downloaded...wandb: \ 142 of 420 files downloaded...wandb: | 158 of 420 files downloaded...wandb: / 175 of 420 files downloaded...wandb: - 177 of 420 files downloaded...wandb: \ 182 of 420 files downloaded...wandb: | 194 of 420 files downloaded...wandb: / 209 of 420 files downloaded...wandb: - 232 of 420 files downloaded...wandb: \ 246 of 420 files downloaded...wandb: | 259 of 420 files downloaded...wandb: / 265 of 420 files downloaded...wandb: - 280 of 420 files downloaded...wandb: \ 297 of 420 files downloaded...wandb: | 325 of 420 files downloaded...wandb: / 352 of 420 files downloaded...wandb: - 390 of 420 files downloaded...wandb: \ 399 of 420 files downloaded...wandb: | 411 of 420 files downloaded...wandb:   420 of 420 files downloaded.  
-Done. 0:0:4.0
-wandb:   5 of 5 files downloaded.  
-2023-05-06 20:55:37.685328: W tensorflow/core/grappler/optimizers/data/auto_shard.cc:776] AUTO sharding policy will apply DATA sharding policy as it failed to apply FILE sharding policy because of the following reason: Did not find a shardable source, walked to a node which is not a dataset: name: "FlatMapDataset/_2"
-op: "FlatMapDataset"
-input: "TensorDataset/_1"
-attr {
-  key: "Targuments"
-  value {
-    list {
-    }
-  }
-}
-attr {
-  key: "_cardinality"
-  value {
-    i: -2
-  }
-}
-attr {
-  key: "f"
-  value {
-    func {
-      name: "__inference_Dataset_flat_map_flat_map_fn_70442"
-    }
-  }
-}
-attr {
-  key: "metadata"
-  value {
-    s: "\n\020FlatMapDataset:1"
-  }
-}
-attr {
-  key: "output_shapes"
-  value {
-    list {
-      shape {
-        dim {
-          size: -1
-        }
-        dim {
-          size: -1
-        }
-        dim {
-          size: -1
-        }
-      }
-      shape {
-        dim {
-          size: -1
-        }
-      }
-    }
-  }
-}
-attr {
-  key: "output_types"
-  value {
-    list {
-      type: DT_FLOAT
-      type: DT_INT32
-    }
-  }
-}
-experimental_type {
-  type_id: TFT_PRODUCT
-  args {
-    type_id: TFT_DATASET
-    args {
-      type_id: TFT_PRODUCT
-      args {
-        type_id: TFT_TENSOR
-        args {
-          type_id: TFT_FLOAT
-        }
-      }
-      args {
-        type_id: TFT_TENSOR
-        args {
-          type_id: TFT_INT32
-        }
-      }
-    }
-  }
-}
-. Consider either turning off auto-sharding or switching the auto_shard_policy to DATA to shard this dataset. You can do this by creating a new `tf.data.Options()` object then setting `options.experimental_distribute.auto_shard_policy = AutoShardPolicy.DATA` before applying the options object to the dataset via `dataset.with_options(options)`.
-WARNING:tensorflow:Gradients do not exist for variables ['Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/attention_output/bias:0', 'dense_20/kernel:0', 'dense_20/bias:0', 'dense_21/kernel:0', 'dense_21/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/attention_output/bias:0', 'dense_24/kernel:0', 'dense_24/bias:0', 'dense_25/kernel:0', 'dense_25/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/attention_output/bias:0', 'dense_28/kernel:0', 'dense_28/bias:0', 'dense_29/kernel:0', 'dense_29/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/attention_output/bias:0', 'dense_32/kernel:0', 'dense_32/bias:0', 'dense_33/kernel:0', 'dense_33/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/attention_output/bias:0', 'dense_36/kernel:0', 'dense_36/bias:0', 'dense_37/kernel:0', 'dense_37/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/attention_output/bias:0', 'dense_40/kernel:0', 'dense_40/bias:0', 'dense_41/kernel:0', 'dense_41/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/attention_output/bias:0', 'dense_44/kernel:0', 'dense_44/bias:0', 'dense_45/kernel:0', 'dense_45/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/attention_output/bias:0', 'dense_48/kernel:0', 'dense_48/bias:0', 'dense_49/kernel:0', 'dense_49/bias:0'] when minimizing the loss. If you're using `model.compile()`, did you forget to provide a `loss` argument?
-WARNING:tensorflow:Gradients do not exist for variables ['Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention/multi_head_attention_block/multi_head_attention_1/attention_output/bias:0', 'dense_20/kernel:0', 'dense_20/bias:0', 'dense_21/kernel:0', 'dense_21/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_1/multi_head_attention_block_1/multi_head_attention_3/attention_output/bias:0', 'dense_24/kernel:0', 'dense_24/bias:0', 'dense_25/kernel:0', 'dense_25/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_2/multi_head_attention_block_2/multi_head_attention_5/attention_output/bias:0', 'dense_28/kernel:0', 'dense_28/bias:0', 'dense_29/kernel:0', 'dense_29/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_3/multi_head_attention_block_3/multi_head_attention_7/attention_output/bias:0', 'dense_32/kernel:0', 'dense_32/bias:0', 'dense_33/kernel:0', 'dense_33/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_4/multi_head_attention_block_4/multi_head_attention_9/attention_output/bias:0', 'dense_36/kernel:0', 'dense_36/bias:0', 'dense_37/kernel:0', 'dense_37/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_5/multi_head_attention_block_5/multi_head_attention_11/attention_output/bias:0', 'dense_40/kernel:0', 'dense_40/bias:0', 'dense_41/kernel:0', 'dense_41/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_6/multi_head_attention_block_6/multi_head_attention_13/attention_output/bias:0', 'dense_44/kernel:0', 'dense_44/bias:0', 'dense_45/kernel:0', 'dense_45/bias:0', 'Seeds:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/query/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/query/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/key/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/key/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/value/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/value/bias:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/attention_output/kernel:0', 'xl_model/transformer_xl/pooling_by_multi_head_attention_7/multi_head_attention_block_7/multi_head_attention_15/attention_output/bias:0', 'dense_48/kernel:0', 'dense_48/bias:0', 'dense_49/kernel:0', 'dense_49/bias:0'] when minimizing the loss. If you're using `model.compile()`, did you forget to provide a `loss` argument?
-Using GPU Strategy. Selected GPUs: [0]
-Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
-Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
-Sample './artifacts/nachusa-dna:v0/Wesley049-SB-100420_S188_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
-Sample './artifacts/nachusa-dna:v0/Wesley056-NegCtrl_S195_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
-Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
-Sample './artifacts/nachusa-dna:v0/Wes44-PCRblank3_S45_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
-Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
- 1/20 [>.............................] - ETA: 11:38 - loss: 5.6315 - sparse_categorical_accuracy: 0.0000e+00 2/20 [==>...........................] - ETA: 1:51 - loss: 5.5583 - sparse_categorical_accuracy: 0.0000e+00  3/20 [===>..........................] - ETA: 1:45 - loss: 5.5799 - sparse_categorical_accuracy: 0.0000e+00 4/20 [=====>........................] - ETA: 1:38 - loss: 5.5685 - sparse_categorical_accuracy: 0.0000e+00 5/20 [======>.......................] - ETA: 1:32 - loss: 5.5176 - sparse_categorical_accuracy: 0.0000e+00 6/20 [========>.....................] - ETA: 1:26 - loss: 5.4789 - sparse_categorical_accuracy: 0.0000e+00 7/20 [=========>....................] - ETA: 1:20 - loss: 5.4848 - sparse_categorical_accuracy: 0.0000e+00 8/20 [===========>..................] - ETA: 1:14 - loss: 5.4869 - sparse_categorical_accuracy: 0.0000e+00 9/20 [============>.................] - ETA: 1:07 - loss: 5.4780 - sparse_categorical_accuracy: 0.0000e+0010/20 [==============>...............] - ETA: 1:01 - loss: 5.4842 - sparse_categorical_accuracy: 0.0000e+0011/20 [===============>..............] - ETA: 55s - loss: 5.4749 - sparse_categorical_accuracy: 0.0000e+00 12/20 [=================>............] - ETA: 49s - loss: 5.4835 - sparse_categorical_accuracy: 0.0000e+0013/20 [==================>...........] - ETA: 43s - loss: 5.4944 - sparse_categorical_accuracy: 0.0000e+0014/20 [====================>.........] - ETA: 37s - loss: 5.4794 - sparse_categorical_accuracy: 0.0000e+0015/20 [=====================>........] - ETA: 30s - loss: 5.4704 - sparse_categorical_accuracy: 0.0000e+0016/20 [=======================>......] - ETA: 24s - loss: 5.4590 - sparse_categorical_accuracy: 0.0000e+0017/20 [========================>.....] - ETA: 18s - loss: 5.4603 - sparse_categorical_accuracy: 0.0029    18/20 [==========================>...] - ETA: 12s - loss: 5.4670 - sparse_categorical_accuracy: 0.002819/20 [===========================>..] - ETA: 6s - loss: 5.4561 - sparse_categorical_accuracy: 0.0026 20/20 [==============================] - ETA: 0s - loss: 5.4569 - sparse_categorical_accuracy: 0.00252023-05-06 20:58:12.042121: W tensorflow/core/grappler/optimizers/data/auto_shard.cc:776] AUTO sharding policy will apply DATA sharding policy as it failed to apply FILE sharding policy because of the following reason: Did not find a shardable source, walked to a node which is not a dataset: name: "FlatMapDataset/_2"
-op: "FlatMapDataset"
-input: "TensorDataset/_1"
-attr {
-  key: "Targuments"
-  value {
-    list {
-    }
-  }
-}
-attr {
-  key: "_cardinality"
-  value {
-    i: -2
-  }
-}
-attr {
-  key: "f"
-  value {
-    func {
-      name: "__inference_Dataset_flat_map_flat_map_fn_131163"
-    }
-  }
-}
-attr {
-  key: "metadata"
-  value {
-    s: "\n\021FlatMapDataset:17"
-  }
-}
-attr {
-  key: "output_shapes"
-  value {
-    list {
-      shape {
-        dim {
-          size: -1
-        }
-        dim {
-          size: -1
-        }
-        dim {
-          size: -1
-        }
-      }
-      shape {
-        dim {
-          size: -1
-        }
-      }
-    }
-  }
-}
-attr {
-  key: "output_types"
-  value {
-    list {
-      type: DT_FLOAT
-      type: DT_INT32
-    }
-  }
-}
-experimental_type {
-  type_id: TFT_PRODUCT
-  args {
-    type_id: TFT_DATASET
-    args {
-      type_id: TFT_PRODUCT
-      args {
-        type_id: TFT_TENSOR
-        args {
-          type_id: TFT_FLOAT
-        }
-      }
-      args {
-        type_id: TFT_TENSOR
-        args {
-          type_id: TFT_INT32
-        }
-      }
-    }
-  }
-}
-. Consider either turning off auto-sharding or switching the auto_shard_policy to DATA to shard this dataset. You can do this by creating a new `tf.data.Options()` object then setting `options.experimental_distribute.auto_shard_policy = AutoShardPolicy.DATA` before applying the options object to the dataset via `dataset.with_options(options)`.
-20/20 [==============================] - 196s 8s/step - loss: 5.4569 - sparse_categorical_accuracy: 0.0025 - val_loss: 5.5149 - val_sparse_categorical_accuracy: 0.0000e+00
-Traceback (most recent call last):
-  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 135, in <module>
-    sys.exit(tfu.scripting.boot(main, sys.argv))
-  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 106, in boot
-    return job(*args, **kwargs) or 0
-  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 132, in main
-    train(config, model_path)
-  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 118, in train
-    model.save_weights(tfu.scripting.path_to(config.save_to.format(**config.__dict__)) + ".h5")
-  File "/opt/conda/lib/python3.10/site-packages/keras/utils/traceback_utils.py", line 70, in error_handler
-    raise e.with_traceback(filtered_tb) from None
-  File "/opt/conda/lib/python3.10/site-packages/h5py/_hl/group.py", line 161, in create_dataset
-    dsid = dataset.make_new_dset(group, shape, dtype, data, name, **kwds)
-  File "/opt/conda/lib/python3.10/site-packages/h5py/_hl/dataset.py", line 156, in make_new_dset
-    dset_id = h5d.create(parent.id, name, tid, sid, dcpl=dcpl, dapl=dapl)
-  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
-  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
-  File "h5py/h5d.pyx", line 87, in h5py.h5d.create
-ValueError: Unable to create dataset (name already exists)
-wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
-wandb: 
-wandb: Run history:
-wandb:                           epoch ▁
-wandb:                            loss ▁
-wandb:     sparse_categorical_accuracy ▁
-wandb:                        val_loss ▁
-wandb: val_sparse_categorical_accuracy ▁
-wandb: 
-wandb: Run summary:
-wandb:                      best_epoch 0
-wandb:                   best_val_loss 5.51488
-wandb:                           epoch 0
-wandb:                            loss 5.4569
-wandb:     sparse_categorical_accuracy 0.0025
-wandb:                        val_loss 5.51488
-wandb: val_sparse_categorical_accuracy 0.0
-wandb: 
-wandb: 🚀 View run fiery-totem-51 at: https://wandb.ai/kendragivens/StrXL_Compressed/runs/2ny2cooj
-wandb: Synced 6 W&B file(s), 1 media file(s), 0 artifact file(s) and 1 other file(s)
-wandb: Find logs at: ./wandb/run-20230506_205509-2ny2cooj/logs

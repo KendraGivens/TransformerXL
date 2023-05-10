@@ -1,4 +1,0 @@
-  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 38
-    cli.argument("--compressed_len", type=int, default=250
-                                                       ^^^
-SyntaxError: invalid syntax. Perhaps you forgot a comma?

@@ -1,0 +1,42 @@
+2023-05-09 22:18:04.312758: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-09 22:18:04.657946: I tensorflow/core/util/util.cc:169] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+wandb: wandb version 0.15.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230509_221809-9lstd0nr
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run warm-durian-70
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL_Compressed
+wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL_Compressed/runs/9lstd0nr
+2023-05-09 22:18:18.643747: E tensorflow/stream_executor/cuda/cuda_driver.cc:265] failed call to cuInit: CUDA_ERROR_UNKNOWN: unknown error
+2023-05-09 22:18:18.643777: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:169] retrieving CUDA diagnostic information for host: c2.hamilton.cs.mtsu.edu
+2023-05-09 22:18:18.643782: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:176] hostname: c2.hamilton.cs.mtsu.edu
+2023-05-09 22:18:18.643907: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:200] libcuda reported version is: INVALID_ARGUMENT: expected %d.%d, %d.%d.%d, or %d.%d.%d.%d form for driver version; got "1"
+2023-05-09 22:18:18.643922: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:204] kernel reported version is: 515.65.1
+['StrXL_Compressed_Training.py', '--dataset-artifact', 'sirdavidludwig/nachusa-dna/nachusa-dna:latest', '--encoder-artifact', 'sirdavidludwig/dnabert-pretrain/dnabert-pretrain-64dim:latest', '--wandb-project', 'StrXL_Compressed', '--save-to', 'StrXL_Compressed_{seed}_{mem_len}_{num_compressed_seeds}', '--mem_len', '250', '--compressed_len', '250', '--num_compressed_seeds', '50', '--num_induce', '0', '--gpus', '0', '--seed', '1', '--epochs', '750'] Namespace(gpus=[0], dataset_path=None, dataset_artifact='sirdavidludwig/nachusa-dna/nachusa-dna:latest', encoder_path=None, encoder_artifact='sirdavidludwig/dnabert-pretrain/dnabert-pretrain-64dim:latest', seed=1, mem_switched=False, num_compressed_seeds=50, compressed_len=250, block_size=250, max_set_len=1000, num_induce=0, embed_dim=64, num_layers=8, num_heads=8, mem_len=250, compressed_mem_len=250, dropout_rate=0.01, num_seeds=1, use_layernorm=True, pre_layernorm=True, use_keras_mha=True, set_len=1000, batches_per_epoch=20, validation_batch_size=5, save_to='StrXL_Compressed_{seed}_{mem_len}_{num_compressed_seeds}', batch_size=20, sub_batch_size=0, data_workers=1, run_eagerly=False, use_dynamic_memory=False, wandb_project='StrXL_Compressed', wandb_name=None, wandb_group=None, wandb_mode='online', resume=None, initial_epoch=0, epochs=750)
+Using GPU Strategy. Selected GPUs: [0]
+Traceback (most recent call last):
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 144, in <module>
+    sys.exit(tfu.scripting.boot(main, sys.argv))
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 106, in boot
+    return job(*args, **kwargs) or 0
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 141, in main
+    train(config, model_path)
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 90, in train
+    with tfu.scripting.strategy(config).scope():
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 154, in strategy
+    strategy.instance = tfu_strategy.gpu(config.gpus, use_dynamic_memory=config.use_dynamic_memory)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/strategy.py", line 15, in gpu
+    cpus, gpus = devices.select_gpu(indices, cpu_index, use_dynamic_memory)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/devices.py", line 23, in select_gpu
+    gpus = find_devices("GPU", indices)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/devices.py", line 12, in find_devices
+    devices = [devices[i] for i in indices]
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/devices.py", line 12, in <listcomp>
+    devices = [devices[i] for i in indices]
+IndexError: list index out of range
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: 🚀 View run warm-durian-70 at: https://wandb.ai/kendragivens/StrXL_Compressed/runs/9lstd0nr
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230509_221809-9lstd0nr/logs

@@ -289,8 +289,11 @@ class XlModel(keras.Model):
             trainable_vars = self.trainable_variables
             gradients = tape.gradient(loss+loss_compressed, trainable_vars)
 
-            self.optimizer.apply_gradients(zip(gradients, trainable_vars))
-            self.compiled_metrics.update_state(y, y_pred)
+            gradients = tape.gradient(loss+loss_compressed, trainable_vars)
+            grad_check = tf.debugging.check_numerics(gradients[0], 'check_numerics caught bad gradients')
+            with tf.control_dependencies([grad_check]):
+                self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+                self.compiled_metrics.update_state(y, y_pred)
 
         return {m.name: m.result() for m in self.metrics}
 
