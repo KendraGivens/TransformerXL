@@ -1,0 +1,92 @@
+2023-05-10 23:15:13.028764: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+wandb: wandb version 0.15.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230510_231518-pgx49qdc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run desert-fire-85
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL_Compressed
+wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL_Compressed/runs/pgx49qdc
+wandb: Downloading large artifact nachusa-dna:latest, 4079.09MB. 420 files... 
+wandb: \ 1 of 420 files downloaded...wandb: | 17 of 420 files downloaded...wandb: / 32 of 420 files downloaded...wandb: - 53 of 420 files downloaded...wandb: \ 65 of 420 files downloaded...wandb: | 73 of 420 files downloaded...wandb: / 88 of 420 files downloaded...wandb: - 101 of 420 files downloaded...wandb: \ 116 of 420 files downloaded...wandb: | 121 of 420 files downloaded...wandb: / 130 of 420 files downloaded...wandb: - 140 of 420 files downloaded...wandb: \ 160 of 420 files downloaded...wandb: | 171 of 420 files downloaded...wandb: / 172 of 420 files downloaded...wandb: - 175 of 420 files downloaded...wandb: \ 182 of 420 files downloaded...wandb: | 197 of 420 files downloaded...wandb: / 205 of 420 files downloaded...wandb: - 222 of 420 files downloaded...wandb: \ 225 of 420 files downloaded...wandb: | 250 of 420 files downloaded...wandb: / 258 of 420 files downloaded...wandb: - 283 of 420 files downloaded...wandb: \ 296 of 420 files downloaded...wandb: | 321 of 420 files downloaded...wandb: / 346 of 420 files downloaded...wandb: - 370 of 420 files downloaded...wandb: \ 395 of 420 files downloaded...wandb: | 399 of 420 files downloaded...wandb: / 413 of 420 files downloaded...wandb:   420 of 420 files downloaded.  
+Done. 0:0:4.3
+wandb:   5 of 5 files downloaded.  
+Using GPU Strategy. Selected GPUs: [0]
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes44-PCRblank3_S45_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley049-SB-100420_S188_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley056-NegCtrl_S195_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Epoch 1/750
+Traceback (most recent call last):
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 141, in <module>
+    sys.exit(tfu.scripting.boot(main, sys.argv))
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 106, in boot
+    return job(*args, **kwargs) or 0
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 138, in main
+    train(config, model_path)
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 118, in train
+    tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[wandb_callback])
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 227, in run_safely
+    return fn(*args, **kwargs)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/integration/keras/keras.py", line 174, in new_v2
+    return old_v2(*args, **kwargs)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/integration/keras/keras.py", line 174, in new_v2
+    return old_v2(*args, **kwargs)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/integration/keras/keras.py", line 174, in new_v2
+    return old_v2(*args, **kwargs)
+  File "/opt/conda/lib/python3.10/site-packages/keras/utils/traceback_utils.py", line 70, in error_handler
+    raise e.with_traceback(filtered_tb) from None
+  File "/tmp/__autograph_generated_fileieggk6na.py", line 15, in tf__train_function
+    retval_ = ag__.converted_call(ag__.ld(step_function), (ag__.ld(self), ag__.ld(iterator)), None, fscope)
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/../Scripts/StrXL_Compressed.py", line 292, in train_step
+    gradients = tape.gradient(loss+loss_compressed, trainable_vars)
+RuntimeError: in user code:
+
+    File "/opt/conda/lib/python3.10/site-packages/keras/engine/training.py", line 1160, in train_function  *
+        return step_function(self, iterator)
+    File "/opt/conda/lib/python3.10/site-packages/keras/engine/training.py", line 1146, in step_function  **
+        outputs = model.distribute_strategy.run(run_step, args=(data,))
+    File "/opt/conda/lib/python3.10/site-packages/keras/engine/training.py", line 1135, in run_step  **
+        outputs = model.train_step(data)
+    File "/home/klg6z/work/TransformerXL/STR_XL/Training/../Scripts/StrXL_Compressed.py", line 292, in train_step
+        gradients = tape.gradient(loss+loss_compressed, trainable_vars)
+
+    RuntimeError: A non-persistent GradientTape can only be used to compute one set of gradients (or jacobians)
+
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: 🚀 View run desert-fire-85 at: https://wandb.ai/kendragivens/StrXL_Compressed/runs/pgx49qdc
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230510_231518-pgx49qdc/logs
+Exception in thread ChkStopThr:
+Traceback (most recent call last):
+  File "/opt/conda/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/opt/conda/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 276, in check_stop_status
+    self._loop_check_status(
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 214, in _loop_check_status
+    local_handle = request()
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface.py", line 787, in deliver_stop_status
+    return self._deliver_stop_status(status)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 585, in _deliver_stop_status
+    return self._deliver_record(record)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 560, in _deliver_record
+    handle = mailbox._deliver_record(record, interface=self)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/mailbox.py", line 455, in _deliver_record
+    interface._publish(record)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/home/klg6z/.local/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe

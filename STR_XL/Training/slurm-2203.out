@@ -1,0 +1,112 @@
+2023-05-10 13:32:22.841587: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-10 13:32:23.177057: I tensorflow/core/util/util.cc:169] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+wandb: wandb version 0.15.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230510_133228-ernv5fzz
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run northern-water-75
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL_Compressed
+wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL_Compressed/runs/ernv5fzz
+2023-05-10 13:32:38.419286: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-10 13:32:40.532364: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1616] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 9632 MB memory:  -> device: 0, name: NVIDIA GeForce RTX 2080 Ti, pci bus id: 0000:68:00.0, compute capability: 7.5
+wandb: Downloading large artifact nachusa-dna:latest, 4079.09MB. 420 files... 
+wandb: \ 1 of 420 files downloaded...wandb: | 52 of 420 files downloaded...wandb: / 63 of 420 files downloaded...wandb: - 65 of 420 files downloaded...wandb: \ 85 of 420 files downloaded...wandb: | 102 of 420 files downloaded...wandb: / 129 of 420 files downloaded...wandb: - 131 of 420 files downloaded...wandb: \ 134 of 420 files downloaded...wandb: | 152 of 420 files downloaded...wandb: / 165 of 420 files downloaded...wandb: - 175 of 420 files downloaded...wandb: \ 183 of 420 files downloaded...wandb: | 189 of 420 files downloaded...wandb: / 205 of 420 files downloaded...wandb: - 221 of 420 files downloaded...wandb: \ 228 of 420 files downloaded...wandb: | 252 of 420 files downloaded...wandb: / 265 of 420 files downloaded...wandb: - 282 of 420 files downloaded...wandb: \ 305 of 420 files downloaded...wandb: | 335 of 420 files downloaded...wandb: / 363 of 420 files downloaded...wandb: - 391 of 420 files downloaded...wandb: \ 394 of 420 files downloaded...wandb: | 412 of 420 files downloaded...wandb: / 419 of 420 files downloaded...wandb:   420 of 420 files downloaded.  
+Done. 0:0:4.0
+wandb:   5 of 5 files downloaded.  
+2023-05-10 13:32:56.514912: W tensorflow/core/grappler/optimizers/data/auto_shard.cc:776] AUTO sharding policy will apply DATA sharding policy as it failed to apply FILE sharding policy because of the following reason: Did not find a shardable source, walked to a node which is not a dataset: name: "FlatMapDataset/_2"
+op: "FlatMapDataset"
+input: "TensorDataset/_1"
+attr {
+  key: "Targuments"
+  value {
+    list {
+    }
+  }
+}
+attr {
+  key: "_cardinality"
+  value {
+    i: -2
+  }
+}
+attr {
+  key: "f"
+  value {
+    func {
+      name: "__inference_Dataset_flat_map_flat_map_fn_64261"
+    }
+  }
+}
+attr {
+  key: "metadata"
+  value {
+    s: "\n\020FlatMapDataset:1"
+  }
+}
+attr {
+  key: "output_shapes"
+  value {
+    list {
+      shape {
+        dim {
+          size: -1
+        }
+        dim {
+          size: -1
+        }
+        dim {
+          size: -1
+        }
+      }
+      shape {
+        dim {
+          size: -1
+        }
+      }
+    }
+  }
+}
+attr {
+  key: "output_types"
+  value {
+    list {
+      type: DT_FLOAT
+      type: DT_INT32
+    }
+  }
+}
+experimental_type {
+  type_id: TFT_PRODUCT
+  args {
+    type_id: TFT_DATASET
+    args {
+      type_id: TFT_PRODUCT
+      args {
+        type_id: TFT_TENSOR
+        args {
+          type_id: TFT_FLOAT
+        }
+      }
+      args {
+        type_id: TFT_TENSOR
+        args {
+          type_id: TFT_INT32
+        }
+      }
+    }
+  }
+}
+. Consider either turning off auto-sharding or switching the auto_shard_policy to DATA to shard this dataset. You can do this by creating a new `tf.data.Options()` object then setting `options.experimental_distribute.auto_shard_policy = AutoShardPolicy.DATA` before applying the options object to the dataset via `dataset.with_options(options)`.
+Using GPU Strategy. Selected GPUs: [0]
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes44-PCRblank3_S45_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes7-PCRblank1_S8_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley049-SB-100420_S188_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wes24-PCRblank2_S25_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Sample './artifacts/nachusa-dna:v0/Wesley056-NegCtrl_S195_L001_R1_001.db' does not contain enough sequences. This sample will be ignored.
+Epoch 1/750
+slurmstepd: error: *** JOB 2203 ON c3 CANCELLED AT 2023-05-10T13:33:19 ***

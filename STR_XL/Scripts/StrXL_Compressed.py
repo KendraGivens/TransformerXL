@@ -197,7 +197,7 @@ class TransformerXL(tf.keras.layers.Layer):
                 new_mems.append(tf.stop_gradient(mems_append))
                 
                 #Perform attention between current segment and uncompressed trimmed memory
-                uncompressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(mems_excess))
+                #uncompressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(mems_excess))
                 
                 compressed_excess = transformer_xl_layer.compress(mems_excess)
                 
@@ -205,9 +205,9 @@ class TransformerXL(tf.keras.layers.Layer):
                 new_compressed.append(compressed_append)
             
                 #Perform attention between current segment and compressed trimmed memory
-                compressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), compressed_excess)
+                #compressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(compressed_excess))
                 
-                loss = tf.linalg.norm(uncompressed_attention-compressed_attention)
+                #loss = tf.linalg.norm(uncompressed_attention-compressed_attention)
             transformer_xl_output = transformer_xl_layer(content_stream=content_stream,
                                                         state=state[i], compressed=compressed[i])
             
@@ -218,7 +218,7 @@ class TransformerXL(tf.keras.layers.Layer):
                 new_mems.append(tf.stop_gradient(mems_append))
                 
                 #Perform attention between current segment and uncompressed trimmed memory
-                uncompressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(mems_excess))
+                #uncompressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), tf.stop_gradient(mems_excess))
                 
                 compressed_excess = transformer_xl_layer.compress(mems_excess)
                 
@@ -226,12 +226,12 @@ class TransformerXL(tf.keras.layers.Layer):
                 new_compressed.append(compressed_append)
             
                 #Perform attention between current segment and compressed trimmed memory
-                compressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), compressed_excess)
+                #compressed_attention = transformer_xl_layer.attention_layer(tf.stop_gradient(content_stream), compressed_excess)
                 
-                loss = tf.linalg.norm(uncompressed_attention-compressed_attention)
+                #loss = tf.linalg.norm(uncompressed_attention-compressed_attention)
 
         output_stream = content_stream
-        return output_stream, new_mems, new_compressed, loss
+        return output_stream, new_mems, new_compressed #, loss
 
 class XlModel(keras.Model):
     def __init__(self, mem_switched, num_compressed_seeds, compressed_len, max_files, encoder, block_size, max_set_len, num_induce, embed_dim, num_layers, num_heads, mem_len, dropout_rate, num_seeds, use_layernorm, pre_layernorm, use_keras_mha, **kwargs):
@@ -279,37 +279,34 @@ class XlModel(keras.Model):
         self.output_layer = keras.layers.Dense(self.max_files, activation=keras.activations.softmax)
         
     
-    def train_step(self, data):
-        x, y = data
+#    def train_step(self, data):
+ #       x, y = data
+#
+ #       with tf.GradientTape() as tape:
+  #          y_pred, loss_compressed = self(x, return_loss=True, training=True) 
+#            loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
 
-        with tf.GradientTape() as tape:
-            y_pred, loss_compressed = self(x, return_loss=True, training=True) 
-            loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
+ #           trainable_vars = self.trainable_variables
+  #          gradients = tape.gradient(loss+loss_compressed, trainable_vars)
 
-            trainable_vars = self.trainable_variables
-            gradients = tape.gradient(loss+loss_compressed, trainable_vars)
+   #         self.optimizer.apply_gradients(zip(gradients, trainable_vars))
+    #        self.compiled_metrics.update_state(y, y_pred)
 
-            gradients = tape.gradient(loss+loss_compressed, trainable_vars)
-            grad_check = tf.debugging.check_numerics(gradients[0], 'check_numerics caught bad gradients')
-            with tf.control_dependencies([grad_check]):
-                self.optimizer.apply_gradients(zip(gradients, trainable_vars))
-                self.compiled_metrics.update_state(y, y_pred)
-
-        return {m.name: m.result() for m in self.metrics}
+     #   return {m.name: m.result() for m in self.metrics}
 
     
-    def test_step(self, data):
-        x, y = data
+  #  def test_step(self, data):
+   #     x, y = data
 
-        y_pred, loss_compressed = self(x, return_loss=True, training=False)
+    #    y_pred, loss_compressed = self(x, return_loss=True, training=False)
 
-        loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
-        self.compiled_metrics.update_state(y, y_pred)
+     #   loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
+      #  self.compiled_metrics.update_state(y, y_pred)
 
-        return {m.name: m.result() for m in self.metrics}
+       # return {m.name: m.result() for m in self.metrics}
 
     
-    def call(self, x, return_loss=False, training=None):        
+    def call(self, x, training=None):        
         mems = tf.zeros((self.num_layers, tf.shape(x)[0], self.mem_len, self.embed_dim))
         compressed = tf.zeros((self.num_layers, tf.shape(x)[0], self.compressed_len, self.embed_dim))
 
@@ -317,13 +314,13 @@ class XlModel(keras.Model):
 
         linear_transform = self.linear_layer(embeddings)
 
-        losses = 0
+        #losses = 0
         
         for i in range(0, self.max_set_len, self.block_size):
             block = linear_transform[:,i:i+self.block_size]
             
-            output, mems, compressed, loss = self.transformer_xl(content_stream=block, state=mems, compressed=compressed)
-            losses = losses + loss
+            output, mems, compressed = self.transformer_xl(content_stream=block, state=mems, compressed=compressed)
+           # losses = losses + loss
             
         pooling = self.pooling_layer(output)
 
@@ -331,8 +328,8 @@ class XlModel(keras.Model):
 
         output = self.output_layer(reshape)          
         
-        if return_loss:
-            return output, losses
+        #if return_loss:
+        #    return output, losses
         
         return output
     

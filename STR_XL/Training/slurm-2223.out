@@ -1,0 +1,25 @@
+2023-05-11 23:01:03.935636: I tensorflow/core/platform/cpu_feature_guard.cc:193] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI FMA
+To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-05-11 23:01:04.280477: I tensorflow/core/util/util.cc:169] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+wandb: WARNING Tried to auto resume run with id ru5fte9s but id vmybwsdfs is set.
+wandb: wandb version 0.15.2 is available!  To upgrade, please run:
+wandb:  $ pip install wandb --upgrade
+wandb: Tracking run with wandb version 0.14.0
+wandb: Run data is saved locally in /home/klg6z/work/TransformerXL/STR_XL/Training/wandb/run-20230511_230109-vmybwsdfs
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run vmybwsdfs
+wandb: ⭐️ View project at https://wandb.ai/kendragivens/StrXL_Compressed
+wandb: 🚀 View run at https://wandb.ai/kendragivens/StrXL_Compressed/runs/vmybwsdfs
+Restoring previous model...
+Traceback (most recent call last):
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 141, in <module>
+    sys.exit(tfu.scripting.boot(main, sys.argv))
+  File "/home/klg6z/.local/lib/python3.10/site-packages/tf_utilities/scripting.py", line 106, in boot
+    return job(*args, **kwargs) or 0
+  File "/home/klg6z/work/TransformerXL/STR_XL/Training/StrXL_Compressed_Training.py", line 134, in main
+    model_path = tfu.scripting.restore(config.save_to.format(**config.__dict__) + ".h5").name
+AttributeError: 'NoneType' object has no attribute 'name'
+wandb: Waiting for W&B process to finish... (failed 1). Press Control-C to abort syncing.
+wandb: - 0.004 MB of 0.004 MB uploaded (0.000 MB deduped)wandb: \ 0.004 MB of 0.004 MB uploaded (0.000 MB deduped)wandb: | 0.004 MB of 0.004 MB uploaded (0.000 MB deduped)wandb: / 0.004 MB of 0.004 MB uploaded (0.000 MB deduped)wandb: 🚀 View run vmybwsdfs at: https://wandb.ai/kendragivens/StrXL_Compressed/runs/vmybwsdfs
+wandb: Synced 6 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20230511_230109-vmybwsdfs/logs

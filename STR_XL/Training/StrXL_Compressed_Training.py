@@ -113,8 +113,7 @@ def train(config, model_path):
         wandb_callback = wandb.keras.WandbCallback(save_model=False)
         wandb_callback.save_model_as_artifact = False
         wandb_callback.save_weights_only: bool = True
-        wandb_callback.save_freq: Union[SaveStrategy, int] = "epoch",
-        
+        wandb_callback.save_freq: Union[SaveStrategy, int] = "epoch",   
 
         tfu.scripting.run_safely(model.fit, x=train_dataset, validation_data=val_dataset, epochs=config.epochs + config.initial_epoch, initial_epoch=tfu.scripting.initial_epoch(config), verbose=1, callbacks=[wandb_callback])
 
